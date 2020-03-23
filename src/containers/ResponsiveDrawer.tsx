@@ -18,7 +18,7 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import { withRouter, Link } from 'react-router-dom';
 
 import ResponsiveDrawerListItem from '../components/ResponsiveDrawerListItem';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme, useTheme } from '@material-ui/core/styles';
 import withStyles, { WithStyles, StyleRules } from '@material-ui/core/styles/withStyles';
 
 
@@ -108,6 +108,7 @@ interface Props {
 const Responsivedrawer: React.FC<Props> = props => {
 
   const classes = useStyles();
+  const theme = useTheme();
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -228,4 +229,4 @@ const Responsivedrawer: React.FC<Props> = props => {
 };
 
 
-export default withStyles(styles)(Responsivedrawer);
+export default Responsivedrawer;
