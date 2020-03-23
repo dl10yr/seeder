@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import withStyles, { WithStyles, StyleRules } from '@material-ui/core/styles/withStyles';
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import React, { useState, ReactNode } from 'react';
 
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -20,84 +18,96 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import { withRouter, Link } from 'react-router-dom';
 
 import ResponsiveDrawerListItem from '../components/ResponsiveDrawerListItem';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import withStyles, { WithStyles, StyleRules } from '@material-ui/core/styles/withStyles';
 
-const styles = (theme: Theme): StyleRules => createStyles({
-  root: {
-    flexGrow: 1,
-    height: '100vh',
-    zIndex: 1,
-    overflow: 'hidden',
-    position: 'relative',
-    display: 'flex',
-    width: '100%',
-  },
-  appBar: {
-    position: 'absolute',
-    marginLeft: drawerWidth,
-    [theme.breakpoints.up('md')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-    },
-    backgroundColor: theme.palette.secondary.light,
-  },
-  toolBar: {
-    justifyContent: 'space-between',
-    minHeight: bottomNavigationHeight,
-  },
-  navIconHide: {
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
-    color: theme.palette.text.primary
-  },
-  toolbar: theme.mixins.toolbar,
-  drawerPaper: {
-    width: drawerWidth,
-    height: '100vh',
-    [theme.breakpoints.up('md')]: {
+
+const drawerWidth = 240;
+const headerNavigationHeight = 56;
+const bottomNavigationHeight = 56;
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+      height: '100vh',
+      zIndex: 1,
+      overflow: 'hidden',
       position: 'relative',
+      display: 'flex',
+      width: '100%',
     },
-  },
-  content: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.default,
-    padding: theme.spacing.unit * 3,
-    paddingTop: `calc(10px + ${headerNavigationHeight}px)`,
-    paddingBottom: `calc(10px + ${bottomNavigationHeight}px)`,
-    paddingLeft: 0,
-    paddingRight: 0,
-    [theme.breakpoints.up('md')]: {
-      paddingBottom: 10,
+    appBar: {
+      position: 'absolute',
+      marginLeft: drawerWidth,
+      [theme.breakpoints.up('md')]: {
+        width: `calc(100% - ${drawerWidth}px)`,
+      },
+      backgroundColor: theme.palette.secondary.light,
     },
-  },
+    toolBar: {
+      justifyContent: 'space-between',
+      minHeight: bottomNavigationHeight,
+    },
+    navIconHide: {
+      [theme.breakpoints.up('md')]: {
+        display: 'none',
+      },
+      color: theme.palette.text.primary
+    },
+    toolbar: theme.mixins.toolbar,
+    drawerPaper: {
+      width: drawerWidth,
+      height: '100vh',
+      [theme.breakpoints.up('md')]: {
+        position: 'relative',
+      },
+    },
+    content: {
+      flexGrow: 1,
+      backgroundColor: theme.palette.background.default,
+      padding: theme.spacing(3),
+      paddingTop: `calc(10px + ${headerNavigationHeight}px)`,
+      paddingBottom: `calc(10px + ${bottomNavigationHeight}px)`,
+      paddingLeft: 0,
+      paddingRight: 0,
+      [theme.breakpoints.up('md')]: {
+        paddingBottom: 10,
+      },
+    },
 
-  headerLogo: {
-    display: 'flex',
-    height: 40,
-    width: 180,
-  },
-  iconLogo: {
-    display: 'flex',
-    height: 40,
-    width: 40,
-    borderRadius: '50%',
-  },
+    headerLogo: {
+      display: 'flex',
+      height: 40,
+      width: 180,
+    },
+    iconLogo: {
+      display: 'flex',
+      height: 40,
+      width: 40,
+      borderRadius: '50%',
+    },
 
-  searchbar: {
-    // flexGrow: 1,
-  },
-  flex: {
-    flexGrow: 1,
-  },
-  a: {
-    color: 'white',
-  }
-});
+    searchbar: {
+      // flexGrow: 1,
+    },
+    flex: {
+      flexGrow: 1,
+    },
+    a: {
+      color: 'white',
+    }
+  })
+);
 
-interface Props extends WithStyles<typeof styles> {
+interface Props {
   title?: string;
+  children: ReactNode;
 }
 
-const Responsivedrawer: React.FC<Props> = ({ classes, title }: Props) => {
+const Responsivedrawer: React.FC<Props> = props => {
+
+  const classes = useStyles();
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -211,7 +221,7 @@ const Responsivedrawer: React.FC<Props> = ({ classes, title }: Props) => {
         </Drawer>
       </Hidden>
       <main className={classes.content}>
-        {this.props.children}
+        {props.children}
       </main>
     </div>
   );
