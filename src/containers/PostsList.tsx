@@ -75,7 +75,7 @@ const PostsList: React.FC<Props> = props => {
           </div>
           <div className={classes.liitem}>
             <div className={classes.licontent}>
-              <h3>bbbbbb</h3>
+              <h3>bfffbbbbb</h3>
             </div>
             <a href="#">
               <small>bbb</small>
