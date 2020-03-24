@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 // import { theme } from './materialui/theme'
-import { BrowserRouter as Router } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 
 import { createBrowserHistory } from 'history';
 import { Provider } from 'react-redux';
