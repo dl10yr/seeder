@@ -141,10 +141,18 @@ const Responsivedrawer: React.FC<Props> = props => {
     <div>
       <List>
         <ResponsiveDrawerListItem
+          to="/new"
+          onClick={closeDrawerNav}
+          icon={<SendIcon />}
+          text="投稿する"
+        />
+      </List>
+      <List>
+        <ResponsiveDrawerListItem
           to="/postslist"
           onClick={closeDrawerNav}
           icon={<ViewListIcon />}
-          text="テーマ一覧"
+          text="投稿一覧"
         />
       </List>
       {renderBarswitchCondition()}
