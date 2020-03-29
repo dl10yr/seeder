@@ -4,7 +4,8 @@ import Select from "react-select";
 import Input from "@material-ui/core/Input";
 import { TextField } from "@material-ui/core";
 import { makeStyles, createStyles, Theme, useTheme } from '@material-ui/core/styles';
-
+import axios from 'axios';
+import Joi from "@hapi/joi";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,30 +58,13 @@ type FormData = {
   field: string,
 };
 
-export default function CreateForm() {
+const CreateForm = props => {
   const classes = useStyles();
+  const { onSubmit } = props
   const { register, errors, handleSubmit } = useForm<FormData>();
-
-  const onSubmit = (data: FormData) => {
-    console.log(data)
-  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className={classes.button_wrapper}>
-        <TextField
-          label="YouTube動画URL"
-          type="text"
-          name="content"
-          fullWidth
-          margin="normal"
-          inputRef={register({ required: true, maxLength: 20 })}
-          error={Boolean(errors.content)}
-          helperText={errors.content}
-          variant="outlined"
-          className={classes.field}
-        />
-      </div>
       <div className={classes.button_wrapper}>
         <TextField
           label="投稿内容"
@@ -89,8 +73,8 @@ export default function CreateForm() {
           fullWidth
           margin="normal"
           rows="10"
+          inputRef={register}
           multiline
-          inputRef={register({ required: true, maxLength: 20 })}
           error={Boolean(errors.content)}
           helperText={errors.content && "内容は20文字以上にして下さい。"}
           variant="outlined"
@@ -109,3 +93,5 @@ export default function CreateForm() {
     </form>
   );
 }
+
+export default CreateForm;
