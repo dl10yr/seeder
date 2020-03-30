@@ -90,18 +90,6 @@ const resolver = (data: FormData, validationContext) => {
       //   this.props.actions.setNotification('error', '送信に失敗しました');
       // }
     })
-  console.log(values)
-  return {
-    values: error ? {} : values,
-    errors: error
-      ? error.details.reduce((previous, currentError) => {
-        return {
-          ...previous,
-          [currentError.path[0]]: currentError
-        };
-      }, {})
-      : {}
-  };
 }
 
 
@@ -110,7 +98,6 @@ const MovieForm = props => {
   const { resolver, onSubmit } = props;
   const { register, errors, handleSubmit } = useForm<FormData>({
     mode: 'onBlur',
-    validationResolver: resolver,
   });
 
   return (
