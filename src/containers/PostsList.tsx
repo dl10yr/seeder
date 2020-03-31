@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { makeStyles, createStyles, Theme, useTheme } from '@material-ui/core/styles';
 import withStyles, { WithStyles, StyleRules } from '@material-ui/core/styles/withStyles';
 
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { Scrollbars } from 'react-custom-scrollbars';
+import ContentsCard from '../components/ContentsCard';
+
+import firebase from 'firebase';
+import { firestore } from '../plugins/firebase';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,6 +54,34 @@ interface Props {
 const PostsList: React.FC<Props> = props => {
   const classes = useStyles();
   const theme = useTheme();
+  const [posts, setPosts] = useState([]);
+
+
+
+  useEffect(() => {
+    firestore.collection('posts')
+      .orderBy('created_at', 'desc')
+      .limit(10)
+      .get()
+      .then(snapShot => {
+        let posts = [];
+        snapShot.forEach(doc => {
+          posts.push({
+            content: doc.data().content,
+            created_at: doc.data().created_at,
+            channelId: doc.data().channelId,
+            thumnailUrl: doc.data().thumbnailUrl.url,
+          })
+        })
+        setPosts(posts);
+      })
+
+
+  });
+
+  const getPosts = () => {
+
+  }
 
   return (
     <ul className={classes.ul}>

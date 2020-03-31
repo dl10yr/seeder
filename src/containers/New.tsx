@@ -97,7 +97,7 @@ const New: React.FC<Props> = props => {
         // }
       })
 
-    setPage(page + 1);
+    setPage(2);
     setData(prevData => ({
       ...prevData,
       ...values,
@@ -137,8 +137,13 @@ const New: React.FC<Props> = props => {
       })
   }
 
-  const movieSearch_r = () => {
-
+  function getUniqueStr(myStrong) {
+    var strong = 1000;
+    if (myStrong) strong = myStrong;
+    return (
+      new Date().getTime().toString(16) +
+      Math.floor(strong * Math.random()).toString(16)
+    );
   }
 
   const postSubmit = (values) => {
@@ -148,6 +153,9 @@ const New: React.FC<Props> = props => {
     const thumbnailUrl = moviedata.thumbnails.default
     const url = data.url
     const content = values.content
+
+
+
     firestore.collection('posts').add({
       title: title,
       created_at: new Date(),
@@ -169,24 +177,29 @@ const New: React.FC<Props> = props => {
   return (
     <div className={classes.container}>
       <MovieForm onSubmit={nextPage} />
-      <Card className={classes.card}>
-        <div className={classes.details}>
-          <CardContent className={classes.content}>
-            <Typography component="h6" variant="subtitle1">
-              {moviedata.title}
-            </Typography>
-            <Typography variant="caption" >
-              {moviedata.channelTitle}
-            </Typography>
-          </CardContent>
+      {page === 2 &&
+        <div>
+          <Card className={classes.card}>
+            <div className={classes.details}>
+              <CardContent className={classes.content}>
+                <Typography component="h6" variant="subtitle1">
+                  {moviedata.title}
+                </Typography>
+                <Typography variant="caption" >
+                  {moviedata.channelTitle}
+                </Typography>
+              </CardContent>
+            </div>
+            <CardMedia
+              className={classes.cover}
+              image={moviedata.thumbnails.default.url}
+              title="thumbnail"
+            />
+          </Card>
+          <ContentForm onSubmit={postSubmit} />
         </div>
-        <CardMedia
-          className={classes.cover}
-          image={moviedata.thumbnails.default.url}
-          title="thumbnail"
-        />
-      </Card>
-      <ContentForm onSubmit={postSubmit} />
+      }
+
     </div>
   )
 };
