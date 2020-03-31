@@ -9,10 +9,13 @@ import Joi from "@hapi/joi";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    root: {
+      width: '100%',
+    },
     button: {
       margin: 'auto',
       padding: '10px',
-      width: '20%',
+      width: '100%',
       height: '8%',
       textAlign: 'center',
       textDecoration: 'none',
@@ -25,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
     },
     field: {
-      width: '80%',
+      width: '100%',
       textAlign: 'center',
       '& label.Mui-focused': {
         color: 'green',
@@ -64,7 +67,7 @@ const CreateForm = props => {
   const { register, errors, handleSubmit } = useForm<FormData>();
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className={classes.root}>
       <div className={classes.button_wrapper}>
         <TextField
           label="投稿内容"

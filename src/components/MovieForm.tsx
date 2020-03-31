@@ -1,7 +1,8 @@
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
-import Input from "@material-ui/core/Input";
+import Input from "@material-ui/core/Input"
+import SearchIcon from '@material-ui/icons/Search';
 import { TextField } from "@material-ui/core";
 import { makeStyles, createStyles, Theme, useTheme } from '@material-ui/core/styles';
 import axios from 'axios';
@@ -10,22 +11,18 @@ import Joi from "@hapi/joi";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     button: {
-      margin: 'auto',
-      padding: '10px',
-      width: '20%',
-      height: '8%',
+      marginTop: '30px',
+      width: '10%',
       textAlign: 'center',
       textDecoration: 'none',
       fontWeight: 'bold',
       fontSize: 'large',
-      color: 'whitesmoke',
-      background: '#2dd57a',
-      borderRadius: '5px',
+      color: 'black',
+      background: 'transparent',
       borderWidth: '0',
-
     },
     field: {
-      width: '80%',
+      width: '70%',
       textAlign: 'center',
       '& label.Mui-focused': {
         color: 'green',
@@ -46,8 +43,8 @@ const useStyles = makeStyles((theme: Theme) =>
       }
     },
     button_wrapper: {
-      textAlign: 'center',
-      marginTop: "20px"
+      display: 'inline',
+      margin: '16px'
     }
   })
 );
@@ -123,8 +120,8 @@ const MovieForm = props => {
             type="submit"
             className={classes.button}
           >
-            動画を探す
-        </button>
+            <SearchIcon />
+          </button>
         </div>
       </form>
     </div>
