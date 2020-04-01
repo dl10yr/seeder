@@ -48,59 +48,80 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-  title?: string;
-}
+  title: string;
+  submitPost: (event: React.FormEvent<HTMLFormElement>) => void
+};
 
 const PostsList: React.FC<Props> = props => {
   const classes = useStyles();
-  const theme = useTheme();
-  const [posts, setPosts] = useState([]);
+  type Post = {
+    content: string,
+    title?: string,
+    created_at: Date,
+    channelId?: string,
+    channelTitle?: string,
+    thumbnailUrl: string,
+  }
+  type Posts = {
+    posts: Post[]
+  }
+  const [posts, setPosts] = useState<Post[]>([]);
 
 
-
-  useEffect(() => {
+  const getPosts = () => {
     firestore.collection('posts')
       .orderBy('created_at', 'desc')
       .limit(10)
       .get()
       .then(snapShot => {
-        let posts = [];
+        console.log(snapShot);
         snapShot.forEach(doc => {
-          posts.push({
+          let post = {
             content: doc.data().content,
             created_at: doc.data().created_at,
             channelId: doc.data().channelId,
-            thumnailUrl: doc.data().thumbnailUrl.url,
-          })
+            thumbnailUrl: doc.data().thumbnailUrl,
+
+          }
+          console.log(post)
+          posts.push(post)
         })
         setPosts(posts);
-      })
 
+      })
+  }
+
+
+  useEffect(() => {
+    getPosts();
+    console.log(posts)
 
   });
 
-  const getPosts = () => {
-
-  }
 
   return (
     <ul className={classes.ul}>
-      <li className={classes.li}>
-        <div className={classes.libody}>
-          <div className={classes.liimg}>
-            <img src="#" width="48" height="48" />
-          </div>
-          <div className={classes.liitem}>
-            <div className={classes.licontent}>
-              <h3>aaaaaa</h3>
+      {posts.map(post => {
+        return (
+          <li className={classes.li}>
+            <div className={classes.libody}>
+              <div className={classes.liimg}>
+                <img src={post.thumbnailUrl} width="48" height="48" />
+              </div>
+              <div className={classes.liitem}>
+                <div className={classes.licontent}>
+                  <h3>{post.content}</h3>
+                </div>
+                <a href="#">
+                  <small>{post.title}</small>
+                </a>
+                <small>{post.channelTitle}</small>
+              </div>
             </div>
-            <a href="#">
-              <small>aaa</small>
-            </a>
-            <small>aaa</small>
-          </div>
-        </div>
-      </li >
+          </li >
+        );
+      })}
+
       <li className={classes.li}>
         <div className={classes.libody}>
           <div className={classes.liimg}>
@@ -118,9 +139,9 @@ const PostsList: React.FC<Props> = props => {
         </div>
       </li >
     </ul >
+  );
+}
 
-  )
-};
 
 
 export default PostsList;

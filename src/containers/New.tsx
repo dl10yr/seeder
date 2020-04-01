@@ -69,6 +69,7 @@ const New: React.FC<Props> = props => {
     channelId: "",
     thumbnails: { default: { url: "" } },
     channelTitle: "",
+    post_id: ""
   });
   const nextPage = (values) => {
     const movie_url = values.url.split('/')
@@ -137,9 +138,8 @@ const New: React.FC<Props> = props => {
       })
   }
 
-  function getUniqueStr(myStrong) {
+  function getUniqueStr() {
     var strong = 1000;
-    if (myStrong) strong = myStrong;
     return (
       new Date().getTime().toString(16) +
       Math.floor(strong * Math.random()).toString(16)
@@ -153,8 +153,7 @@ const New: React.FC<Props> = props => {
     const thumbnailUrl = moviedata.thumbnails.default
     const url = data.url
     const content = values.content
-
-
+    const post_id = getUniqueStr();
 
     firestore.collection('posts').add({
       title: title,
@@ -163,6 +162,7 @@ const New: React.FC<Props> = props => {
       channelId: channelId,
       channelTitle: channelTitle,
       thumnailUrl: thumbnailUrl,
+      post_id: post_id
     }).then(() => {
 
     })
@@ -171,6 +171,7 @@ const New: React.FC<Props> = props => {
       channelId: "",
       thumbnails: { default: { url: "" } },
       channelTitle: "",
+      post_id: ""
     });
   }
 
