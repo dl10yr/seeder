@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { useGlobal } from "reactn";
 import { makeStyles, createStyles, Theme, useTheme } from '@material-ui/core/styles';
 import withStyles, { WithStyles, StyleRules } from '@material-ui/core/styles/withStyles';
 
@@ -63,46 +64,42 @@ const PostsList: React.FC<Props> = props => {
     thumbnailUrl: string,
   }
   type Posts = {
-    posts: Post[]
+    posts: Post[],
+    tmp_posts: Post[],
+    fetch_posts: Post[],
   }
-  const [posts, setPosts] = useState<Post[]>([]);
+  // const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useGlobal("posts");
 
 
-  const getPosts = () => {
-    firestore.collection('posts')
-      .orderBy('created_at', 'desc')
-      .limit(10)
-      .get()
-      .then(snapShot => {
-        console.log(snapShot);
-        snapShot.forEach(doc => {
-          let post = {
-            content: doc.data().content,
-            created_at: doc.data().created_at,
-            channelId: doc.data().channelId,
-            thumbnailUrl: doc.data().thumbnailUrl,
 
-          }
-          console.log(post)
-          posts.push(post)
-        })
-        setPosts(posts);
+  // async function getPosts() {
+  //   let tmp_posts = new Array();
+  //   const snapShot = await firestore.collection('posts')
+  //     .orderBy('created_at', 'desc')
+  //     .limit(10)
+  //     .get()
+  //   snapShot.forEach(doc => {
+  //     let post = {
+  //       content: doc.data().content,
+  //       created_at: doc.data().created_at,
+  //       channelId: doc.data().channelId,
+  //       thumbnailUrl: doc.data().thumbnailUrl,
+  //     }
+  //     tmp_posts.push(post);
+  //   })
+  //   // setPosts(tmp_posts);
+  // }
 
-      })
-  }
-
-
-  useEffect(() => {
-    getPosts();
-    console.log(posts)
-
-  });
+  // useEffect(() => {
+  //   getPosts();
+  // }, []);
 
 
   return (
-    <ul className={classes.ul}>
-      {posts.map(post => {
-        return (
+    <Scrollbars>
+      <ul className={classes.ul}>
+        {posts.map(post => (
           <li className={classes.li}>
             <div className={classes.libody}>
               <div className={classes.liimg}>
@@ -119,26 +116,27 @@ const PostsList: React.FC<Props> = props => {
               </div>
             </div>
           </li >
-        );
-      })}
+        ))}
 
-      <li className={classes.li}>
-        <div className={classes.libody}>
-          <div className={classes.liimg}>
-            <img src="#" width="48" height="48" />
-          </div>
-          <div className={classes.liitem}>
-            <div className={classes.licontent}>
-              <h3>bfffbbbbb</h3>
+        <li className={classes.li}>
+          <div className={classes.libody}>
+            <div className={classes.liimg}>
+              <img src="#" width="48" height="48" />
             </div>
-            <a href="#">
+            <div className={classes.liitem}>
+              <div className={classes.licontent}>
+                <h3>bfffbbbbb</h3>
+              </div>
+              <a href="#">
+                <small>bbb</small>
+              </a>
               <small>bbb</small>
-            </a>
-            <small>bbb</small>
+            </div>
           </div>
-        </div>
-      </li >
-    </ul >
+        </li >
+      </ul >
+    </Scrollbars>
+
   );
 }
 

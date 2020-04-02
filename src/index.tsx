@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { setGlobal } from "reactn";
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -11,6 +11,8 @@ import { Provider } from 'react-redux';
 
 import thunk from 'redux-thunk'
 import { createStore, applyMiddleware } from 'redux';
+import firebase from 'firebase';
+import { firestore } from './plugins/firebase';
 
 // const middlewares = []
 // middlewares.push(thunk)
@@ -19,6 +21,28 @@ const history = createBrowserHistory();
 /*const store = createStore(
    applyMiddleware(thunk) 
 ) */
+setGlobal({ posts: [] });
+
+async function getPosts() {
+  let tmp_posts = new Array();
+  const snapShot = await firestore.collection('posts')
+    .orderBy('created_at', 'desc')
+    .limit(10)
+    .get()
+  snapShot.forEach(doc => {
+    let post = {
+      content: doc.data().content,
+      created_at: doc.data().created_at,
+      channelId: doc.data().channelId,
+      thumbnailUrl: doc.data().thumbnailUrl,
+    }
+    tmp_posts.push(post);
+  })
+  setGlobal({ posts: tmp_posts });
+};
+
+getPosts();
+
 
 ReactDOM.render(
   <Router history={history}>
