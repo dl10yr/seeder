@@ -34,7 +34,10 @@ async function getPosts() {
       content: doc.data().content,
       created_at: doc.data().created_at,
       channelId: doc.data().channelId,
-      thumbnailUrl: doc.data().thumbnailUrl,
+      thumnailUrl: doc.data().thumnailUrl,
+      title: doc.data().title,
+      post_id: doc.data().post_id,
+      channelTitle: doc.data().channelTitle
     }
     tmp_posts.push(post);
   })

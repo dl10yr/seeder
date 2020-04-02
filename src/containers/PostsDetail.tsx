@@ -11,7 +11,6 @@ import ContentsCard from '../components/ContentsCard';
 
 import firebase from 'firebase';
 import { firestore } from '../plugins/firebase';
-import { Link, withRouter } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,9 +22,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     li: {
       background: '#eee',
-    },
-    link: {
-      textDecoration: 'none',
     },
     libody: {
       padding: '5px',
@@ -57,34 +53,30 @@ interface Props {
   submitPost: (event: React.FormEvent<HTMLFormElement>) => void
 };
 
-const PostsList: React.FC<Props> = props => {
+const PostsDetail: React.FC<Props> = props => {
   const classes = useStyles();
+  type Post = {
+    content: string,
+    title?: string,
+    created_at: Date,
+    channelId?: string,
+    channelTitle?: string,
+    thumbnailUrl: { height: number, url: string, width: number },
+
+  }
+  type Posts = {
+    posts: Post[],
+    tmp_posts: Post[],
+    fetch_posts: Post[],
+  }
+  // const [posts, setPosts] = useState<Post[]>([]);
   const [posts, setPosts] = useGlobal("posts");
+
+
 
   return (
     <Scrollbars>
       <ul className={classes.ul}>
-        {posts.map(post => (
-          <Link to={"/posts/" + post.post_id} className={classes.link}>
-            <li className={classes.li}>
-              <div className={classes.libody}>
-                <div className={classes.liimg}>
-                  <img src={post.thumnailUrl} width="48" height="48" />
-                </div>
-                <div className={classes.liitem}>
-                  <div className={classes.licontent}>
-                    <h3>{post.content}</h3>
-                  </div>
-                  <a href="#">
-                    <small>{post.title}</small>
-                  </a>
-                  <small>{post.channelTitle}</small>
-                </div>
-              </div>
-            </li >
-          </Link>
-        ))}
-
         <li className={classes.li}>
           <div className={classes.libody}>
             <div className={classes.liimg}>
@@ -109,4 +101,4 @@ const PostsList: React.FC<Props> = props => {
 
 
 
-export default PostsList;
+export default PostsDetail;

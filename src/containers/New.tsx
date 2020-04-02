@@ -150,7 +150,7 @@ const New: React.FC<Props> = props => {
     const title = moviedata.title
     const channelId = moviedata.channelId
     const channelTitle = moviedata.channelTitle
-    const thumbnailUrl = moviedata.thumbnails.default
+    const thumbnailUrl = moviedata.thumbnails.default.url
     const url = data.url
     const content = values.content
     const post_id = getUniqueStr();
