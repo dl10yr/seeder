@@ -5,8 +5,7 @@ import ContentForm from '../components/ContentForm'
 import { useGlobal } from "reactn";
 import { useForm, Controller } from "react-hook-form";
 
-import SearchIcon from '@material-ui/icons/Search';
-import { TextField } from "@material-ui/core";
+
 import { firestore } from '../plugins/firebase';
 import axios from 'axios'
 
@@ -36,57 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     liimg: {
     },
-    button_wrapper: {
-      textAlign: 'center',
-      marginTop: "20px"
-    },
-    field: {
-      width: '70%',
-      textAlign: 'center',
-      '& label.Mui-focused': {
-        color: 'green',
-      },
-      '& .MuiInput-underline:after': {
-        borderBottomColor: 'green',
-      },
-      '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-          borderColor: 'black',
-        },
-        '&:hover fieldset': {
-          borderColor: 'green',
-        },
-        '&.Mui-focused fieldset': {
-          borderColor: 'green',
-        },
-      }
-    },
-    button: {
-      marginTop: '30px',
-      width: '10%',
-      textAlign: 'center',
-      textDecoration: 'none',
-      fontWeight: 'bold',
-      fontSize: 'large',
-      color: 'black',
-      background: 'transparent',
-      borderWidth: '0',
-    },
-    submitbutton: {
-      margin: 'auto',
-      padding: '10px',
-      width: '100%',
-      height: '8%',
-      textAlign: 'center',
-      textDecoration: 'none',
-      fontWeight: 'bold',
-      fontSize: 'large',
-      color: 'whitesmoke',
-      background: '#2dd57a',
-      borderRadius: '5px',
-      borderWidth: '0',
 
-    },
   })
 );
 
@@ -95,20 +44,12 @@ interface Props {
   submitPost: (event: React.FormEvent<HTMLFormElement>) => void
 }
 
-type FormData = {
-  url: string,
-  content: string,
-  field: string,
-};
-
 const New: React.FC<Props> = props => {
   const classes = useStyles();
   const theme = useTheme();
   const [page, setPage] = useState(1);
   const [currentuser, setCurrentuser] = useGlobal("currentuser");
-  const { register, errors, handleSubmit, reset } = useForm<FormData>({
-    mode: 'onBlur',
-  });
+  const { register, errors, handleSubmit, reset } = useForm<FormData>();
 
   const [data, setData] = useState({ url: "" });
   const [moviedata, setMoviedata] = useState({
@@ -119,8 +60,8 @@ const New: React.FC<Props> = props => {
     post_id: "",
     tags: new Array(),
   });
-  const nextPage = (value) => {
-    const movie_url = value.split('/')
+  const nextPage = (values) => {
+    const movie_url = values.url.split('/')
     var movie_id = movie_url.slice(-1)[0]
     if (movie_id.indexOf('watch?v=') != -1) {
       var movie_id = movie_id.replace('watch?v=', '')
@@ -131,7 +72,7 @@ const New: React.FC<Props> = props => {
       .then((response) => {
         const movie_data = response.data.items[0]
         const movie_title = movie_data.snippet.title
-        console.log(movie_data)
+        console.log(movie_data.snippet)
         setMoviedata(movie_data.snippet)
       })
       .catch((error) => {
@@ -147,6 +88,10 @@ const New: React.FC<Props> = props => {
       })
 
     setPage(2);
+    setData(prevData => ({
+      ...prevData,
+      ...values,
+    }));
 
     console.log(moviedata)
     console.log(data)
@@ -184,34 +129,27 @@ const New: React.FC<Props> = props => {
         tags: tags,
       })
       .then(() => {
-        reset();
-
+        postSuccess();
       })
       .catch(() => {
+        postFail();
       })
 
   }
 
+  function postSuccess() {
+    return "success"
+  }
+
+  function postFail() {
+
+  }
 
   return (
     <Scrollbars>
       <div className={classes.container}>
-        <form onSubmit={handleSubmit(postSubmit)} >
-          <div className={classes.button_wrapper}>
-            <TextField
-              label="YouTube動画URL"
-              type="text"
-              name="url"
-              fullWidth
-              margin="normal"
-              inputRef={register}
-              onBlur={(e) => { nextPage(e.target.value) }}
-              error={Boolean(errors.content)}
-              helperText={errors.content}
-              variant="outlined"
-              className={classes.field}
-            />
-          </div>
+        <MovieForm onSubmit={nextPage} />
+        {page === 2 &&
           <div>
             <Card className={classes.card}>
               <div className={classes.liimg}>
@@ -229,35 +167,11 @@ const New: React.FC<Props> = props => {
                 </CardContent>
               </div>
             </Card>
-            <div className={classes.button_wrapper}>
-              <TextField
-                label="投稿内容"
-                type="text"
-                name="content"
-                fullWidth
-                margin="normal"
-                rows="10"
-                inputRef={register}
-                multiline
-                error={Boolean(errors.content)}
-                helperText={errors.content && "内容は20文字以上にして下さい。"}
-                variant="outlined"
-                className={classes.field}
-              />
-            </div>
-            <div className={classes.button_wrapper}>
-              <button
-                color="primary"
-                type="submit"
-                className={classes.submitbutton}
-              >
-                投稿
-                </button>
-            </div>
+            <ContentForm postSubmit={postSubmit} />
           </div>
-        </form>
-      </div >
-    </Scrollbars >
+        }
+      </div>
+    </Scrollbars>
 
   )
 };

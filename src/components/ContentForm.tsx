@@ -67,38 +67,66 @@ const CreateForm = props => {
   const { register, errors, handleSubmit, reset } = useForm<FormData>();
 
   const onSubmit = (values) => {
-    postSubmit(values);
+    var reaction = postSubmit(values);
+    console.log(reaction)
     reset();
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={classes.root}>
-      <div className={classes.button_wrapper}>
-        <TextField
-          label="投稿内容"
-          type="text"
-          name="content"
-          fullWidth
-          margin="normal"
-          rows="10"
-          inputRef={register}
-          multiline
-          error={Boolean(errors.content)}
-          helperText={errors.content && "内容は20文字以上にして下さい。"}
-          variant="outlined"
-          className={classes.field}
-        />
-      </div>
-      <div className={classes.button_wrapper}>
-        <button
-          color="primary"
-          type="submit"
-          className={classes.button}
-        >
-          投稿
+    <div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className={classes.button_wrapper}>
+          <TextField
+            label="YouTube動画URL"
+            type="text"
+            name="url"
+            fullWidth
+            margin="normal"
+            inputRef={register}
+            error={Boolean(errors.content)}
+            helperText={errors.content}
+            variant="outlined"
+            className={classes.field}
+          />
+        </div>
+        <div className={classes.button_wrapper}>
+          <button
+            color="primary"
+            type="submit"
+            className={classes.button}
+          >
+          </button>
+        </div>
+      </form>
+      <form onSubmit={handleSubmit(onSubmit)} className={classes.root}>
+        <div className={classes.button_wrapper}>
+          <TextField
+            label="投稿内容"
+            type="text"
+            name="content"
+            fullWidth
+            margin="normal"
+            rows="10"
+            inputRef={register}
+            multiline
+            error={Boolean(errors.content)}
+            helperText={errors.content && "内容は20文字以上にして下さい。"}
+            variant="outlined"
+            className={classes.field}
+          />
+        </div>
+        <div className={classes.button_wrapper}>
+          <button
+            color="primary"
+            type="submit"
+            className={classes.button}
+          >
+            投稿
         </button>
-      </div>
-    </form>
+        </div>
+      </form>
+    </div>
+
   );
 }
 
