@@ -1,23 +1,18 @@
 import React, { useState } from 'react';
 import { makeStyles, createStyles, Theme, useTheme } from '@material-ui/core/styles';
-import withStyles, { WithStyles, StyleRules } from '@material-ui/core/styles/withStyles';
 import MovieForm from '../components/MovieForm'
 import ContentForm from '../components/ContentForm'
-import firebase from 'firebase';
+import { useGlobal } from "reactn";
+import { useForm, Controller } from "react-hook-form";
+
+
 import { firestore } from '../plugins/firebase';
 import axios from 'axios'
 
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
 import { Scrollbars } from 'react-custom-scrollbars';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
 
 const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY
 
@@ -28,28 +23,17 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center'
     },
     card: {
-      display: 'flex',
+
     },
     container: {
       padding: '20px',
       width: '90%'
     },
     details: {
-      display: 'flex',
-      flexDirection: 'column',
     },
     content: {
-      flex: '1 0 auto',
     },
-    cover: {
-      margin: '5px',
-      width: '120px',
-    },
-    controls: {
-      display: 'flex',
-      alignItems: 'center',
-      paddingLeft: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
+    liimg: {
     },
   })
 );
@@ -63,13 +47,17 @@ const New: React.FC<Props> = props => {
   const classes = useStyles();
   const theme = useTheme();
   const [page, setPage] = useState(1);
+  const [currentuser, setCurrentuser] = useGlobal("currentuser");
+  const { register, errors, handleSubmit, reset } = useForm<FormData>();
+
   const [data, setData] = useState({ url: "" });
   const [moviedata, setMoviedata] = useState({
     title: "",
     channelId: "",
-    thumbnails: { default: { url: "" } },
+    thumbnails: { medium: { url: "" } },
     channelTitle: "",
-    post_id: ""
+    post_id: "",
+    tags: new Array(),
   });
   const nextPage = (values) => {
     const movie_url = values.url.split('/')
@@ -108,36 +96,6 @@ const New: React.FC<Props> = props => {
     console.log(data)
   };
 
-  const movieSearch = () => {
-    // const { form } = this.props;
-
-    // var value_content = form.CreateForm.values.notes
-    // var send_content = value_content.replace(/\r?\n/g, "");
-
-    const data = {
-      content: "send_content",
-      user_id: 0,
-    }
-    const auth_token = localStorage.auth_token
-    const client_id = localStorage.client_id
-    const uid = localStorage.uid
-
-    axios.post(process.env.REACT_APP_API_URL + '/api/v1/posts', data, {
-      headers: {
-        'access-token': auth_token,
-        'client': client_id,
-        'uid': uid
-      }
-    })
-      .then((response) => {
-        // this.props.actions.setNotification('success', '送信に成功しました');
-        // this.props.formreset();
-      })
-      .catch((error) => {
-        // this.props.actions.setNotification('error', '送信に失敗しました。');
-      })
-  }
-
   function getUniqueStr() {
     var strong = 1000;
     return (
@@ -150,7 +108,8 @@ const New: React.FC<Props> = props => {
     const title = moviedata.title
     const channelId = moviedata.channelId
     const channelTitle = moviedata.channelTitle
-    const thumbnailUrl = moviedata.thumbnails.default.url
+    const thumbnailUrl = moviedata.thumbnails.medium.url
+    const tags = moviedata.tags
     const url = data.url
     const content = values.content
     const post_id = getUniqueStr();
@@ -161,47 +120,52 @@ const New: React.FC<Props> = props => {
       content: content,
       channelId: channelId,
       channelTitle: channelTitle,
-      thumnailUrl: thumbnailUrl,
-      post_id: post_id
+      thumbnailUrl: thumbnailUrl,
+      post_id: post_id,
+      uid: currentuser.uid,
+      url: url,
+      tags: tags,
     }).then(() => {
-
+      reset();
     })
     setMoviedata({
       title: "",
       channelId: "",
-      thumbnails: { default: { url: "" } },
+      thumbnails: { medium: { url: "" } },
       channelTitle: "",
-      post_id: ""
+      post_id: "",
+      tags: new Array(),
     });
   }
 
   return (
-    <div className={classes.container}>
-      <MovieForm onSubmit={nextPage} />
-      {page === 2 &&
-        <div>
-          <Card className={classes.card}>
-            <div className={classes.details}>
-              <CardContent className={classes.content}>
-                <Typography component="h6" variant="subtitle1">
-                  {moviedata.title}
-                </Typography>
-                <Typography variant="caption" >
-                  {moviedata.channelTitle}
-                </Typography>
-              </CardContent>
-            </div>
-            <CardMedia
-              className={classes.cover}
-              image={moviedata.thumbnails.default.url}
-              title="thumbnail"
-            />
-          </Card>
-          <ContentForm onSubmit={postSubmit} />
-        </div>
-      }
+    <Scrollbars>
+      <div className={classes.container}>
+        <MovieForm onSubmit={nextPage} />
+        {page === 2 &&
+          <div>
+            <Card className={classes.card}>
+              <div className={classes.liimg}>
+                <img src={moviedata.thumbnails.medium.url} width="80" height="45" />
+              </div>
+              <Typography variant="caption" >
+                {moviedata.channelTitle}
+              </Typography>
+              <div className={classes.details}>
+                <CardContent className={classes.content}>
+                  <Typography component="p" style={{ fontWeight: 'bold' }}>
+                    {moviedata.title}
+                  </Typography>
 
-    </div>
+                </CardContent>
+              </div>
+            </Card>
+            <ContentForm postSubmit={postSubmit} />
+          </div>
+        }
+      </div>
+    </Scrollbars>
+
   )
 };
 

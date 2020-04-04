@@ -63,8 +63,13 @@ type FormData = {
 
 const CreateForm = props => {
   const classes = useStyles();
-  const { onSubmit } = props
-  const { register, errors, handleSubmit } = useForm<FormData>();
+  const { postSubmit } = props
+  const { register, errors, handleSubmit, reset } = useForm<FormData>();
+
+  const onSubmit = (values) => {
+    postSubmit(values);
+    reset();
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.root}>

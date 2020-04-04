@@ -7,11 +7,11 @@ import withStyles, { WithStyles, StyleRules } from '@material-ui/core/styles/wit
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { Scrollbars } from 'react-custom-scrollbars';
-import ContentsCard from '../components/ContentsCard';
-
+import useResizeObserver from "use-resize-observer";
 import firebase from 'firebase';
 import { firestore } from '../plugins/firebase';
 import { Link, withRouter } from 'react-router-dom';
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,13 +28,12 @@ const useStyles = makeStyles((theme: Theme) =>
       textDecoration: 'none',
     },
     libody: {
-      padding: '5px',
+      padding: theme.spacing(1),
       minWidth: '288px',
     },
     liitem: {
       display: "inline-block",
       verticalAlign: 'top',
-      maxWidth: '75%',
     },
     ul: {
       listStyle: 'none',
@@ -42,12 +41,16 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: '10px',
     },
     liimg: {
-      borderRadius: '50%',
-      width: "60px",
-      display: "inline-block"
+      display: "inline-block",
+      margin: theme.spacing(1),
+      width: "80px",
     },
     licontent: {
       width: '100%',
+    },
+    liinfo: {
+      display: 'inline-block',
+      verticalAlign: 'Top'
     }
   })
 );
@@ -60,47 +63,30 @@ interface Props {
 const PostsList: React.FC<Props> = props => {
   const classes = useStyles();
   const [posts, setPosts] = useGlobal("posts");
+  const [currentuser, setCurrentuser] = useGlobal("currentuser");
+  const { ref, width, height } = useResizeObserver();
 
   return (
     <Scrollbars>
       <ul className={classes.ul}>
         {posts.map(post => (
           <Link to={"/posts/" + post.post_id} className={classes.link}>
-            <li className={classes.li}>
+            <li className={classes.li} ref={ref}>
               <div className={classes.libody}>
-                <div className={classes.liimg}>
-                  <img src={post.thumnailUrl} width="48" height="48" />
-                </div>
-                <div className={classes.liitem}>
-                  <div className={classes.licontent}>
-                    <h3>{post.content}</h3>
-                  </div>
+                <img src={post.thumbnailUrl} className={classes.liimg} />
+                <div className={classes.liinfo} style={{ width: width - 120, }}>
                   <a href="#">
                     <small>{post.title}</small>
                   </a>
                   <small>{post.channelTitle}</small>
                 </div>
+                <div className={classes.licontent}>
+                  <h3>{(post.content.length <= 20) ? post.content : post.content.substr(0, 20) + "..."}</h3>
+                </div>
               </div>
             </li >
           </Link>
         ))}
-
-        <li className={classes.li}>
-          <div className={classes.libody}>
-            <div className={classes.liimg}>
-              <img src="#" width="48" height="48" />
-            </div>
-            <div className={classes.liitem}>
-              <div className={classes.licontent}>
-                <h3>bfffbbbbb</h3>
-              </div>
-              <a href="#">
-                <small>bbb</small>
-              </a>
-              <small>bbb</small>
-            </div>
-          </div>
-        </li >
       </ul >
     </Scrollbars>
 

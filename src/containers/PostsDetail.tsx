@@ -7,7 +7,6 @@ import withStyles, { WithStyles, StyleRules } from '@material-ui/core/styles/wit
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { Scrollbars } from 'react-custom-scrollbars';
-import ContentsCard from '../components/ContentsCard';
 
 import firebase from 'firebase';
 import { firestore } from '../plugins/firebase';
@@ -15,53 +14,77 @@ import { firestore } from '../plugins/firebase';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      textAlign: 'center'
+      paddingTop: theme.spacing(1),
+      paddingBottom: theme.spacing(1),
+      margin: 10,
+    },
+    textLeft: {
+      textAlign: 'left',
     },
     paragraph: {
-      fontFamily: 'serif',
+      marginTop: 10,
+      marginBottom: 10,
     },
-    li: {
-      background: '#eee',
+    title: {
+      fontWeight: 'bold',
+      wordWrap: 'break-word',
+      margin: theme.spacing(2),
     },
-    libody: {
-      padding: '5px',
-      minWidth: '288px',
+    button: {
+      margin: theme.spacing(1),
+      fontweight: "fontWeightBold",
     },
-    liitem: {
-      display: "inline-block",
-      verticalAlign: 'top',
-      maxWidth: '75%',
+    row: {
+      margin: 10,
     },
-    ul: {
-      listStyle: 'none',
-      paddingLeft: '0px',
+    content: {
+      wordWrap: 'break-word',
+      fontWeight: 'bold',
+      margin: "30px"
+    },
+    twitterbutton: {
+      margin: '20px'
+    },
+    deletebutton: {
+      float: 'right',
+      margin: '20px',
+      marginTop: '30px'
+    },
+    loginbtn: {
       margin: '10px',
+      padding: '10px',
+      width: '250px',
+      height: '50px',
+      borderRadius: '5px',
+      textAlign: 'center',
+      textDecoration: 'none',
+      borderWidth: '0',
+      fontWeight: 'bold',
+      fontSize: 'large',
+      color: 'rgb(255, 255, 255)',
+      background: '#00acee',
     },
     liimg: {
-      borderRadius: '50%',
-      width: "60px",
-      display: "inline-block"
+      textAlign: 'center',
     },
-    licontent: {
-      width: '100%',
-    }
   })
 );
 
 interface Props {
   title: string;
   submitPost: (event: React.FormEvent<HTMLFormElement>) => void
+  match: { params: { id: string } };
 };
 
 const PostsDetail: React.FC<Props> = props => {
   const classes = useStyles();
   type Post = {
     content: string,
-    title?: string,
+    title: string,
     created_at: Date,
-    channelId?: string,
-    channelTitle?: string,
-    thumbnailUrl: { height: number, url: string, width: number },
+    channelId: string,
+    channelTitle: string,
+    thumbnailUrl: string,
 
   }
   type Posts = {
@@ -71,30 +94,69 @@ const PostsDetail: React.FC<Props> = props => {
   }
   // const [posts, setPosts] = useState<Post[]>([]);
   const [posts, setPosts] = useGlobal("posts");
+  const [currentuser, setCurrentuser] = useGlobal("currentuser");
+
+  const [displaypost, setDisplaypost] = useState<Post>({
+    content: "",
+    title: "",
+    created_at: new Date(),
+    channelId: "",
+    channelTitle: "",
+    thumbnailUrl: "",
+  });
+
+  async function selectPosts() {
+    var index = posts.findIndex(({ post_id }) => post_id === props.match.params.id);
+    if (index === -1) {
+      const snapShot = await firestore.collection('posts')
+        .where('post_id', '==', props.match.params.id)
+        .limit(10)
+        .get()
+      snapShot.forEach(doc => {
+        let data = {
+          content: doc.data().content,
+          created_at: doc.data().created_at,
+          channelId: doc.data().channelId,
+          thumbnailUrl: doc.data().thumbnailUrl,
+          title: doc.data().title,
+          post_id: doc.data().post_id,
+          channelTitle: doc.data().channelTitle
+        }
+        setDisplaypost(data);
+      })
+    } else {
+      setDisplaypost(posts[index]);
+    }
+  };
 
 
+  useEffect(() => {
+    selectPosts();
+    console.log(currentuser);
+  }, []);
 
   return (
     <Scrollbars>
-      <ul className={classes.ul}>
-        <li className={classes.li}>
-          <div className={classes.libody}>
-            <div className={classes.liimg}>
-              <img src="#" width="48" height="48" />
-            </div>
-            <div className={classes.liitem}>
-              <div className={classes.licontent}>
-                <h3>bfffbbbbb</h3>
-              </div>
-              <a href="#">
-                <small>bbb</small>
-              </a>
-              <small>bbb</small>
-            </div>
+      <div className={classes.textLeft}>
+        <Paper className={classes.root} elevation={1}>
+          <div className={classes.liimg}>
+            <img src={displaypost.thumbnailUrl} width="240" height="135" />
           </div>
-        </li >
-      </ul >
-    </Scrollbars>
+          <Typography variant="subtitle1" className={classes.title}>
+            {displaypost.title}
+          </Typography>
+          <Typography component="p" className={classes.content}>
+            {displaypost.content}
+          </Typography>
+          <Typography component="p" style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
+          </Typography>
+          <Typography component="p" style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
+          </Typography>
+          <Typography component="p" style={{ fontWeight: 'bold' }}>
+          </Typography>
+        </Paper>
+      </div>
+    </Scrollbars >
 
   );
 }

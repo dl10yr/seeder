@@ -10,6 +10,7 @@ import Top from './containers/Top';
 
 import Login from './containers/Login';
 import PostsList from './containers/PostsList';
+import PostsDetail from './containers/PostsDetail';
 import New from './containers/New';
 import ResponsiveDrawer from './containers/ResponsiveDrawer';
 
@@ -28,7 +29,7 @@ function App() {
             <Route path="/info" component={Info} />
             <Route path="/postslist" component={PostsList} />
             <Route exact path="/new" component={New} />
-
+            <Route exact path="/posts/:id" component={PostsDetail} />
           </Switch>
         </ResponsiveDrawer>
 

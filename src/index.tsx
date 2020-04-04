@@ -22,6 +22,8 @@ const history = createBrowserHistory();
    applyMiddleware(thunk) 
 ) */
 setGlobal({ posts: [] });
+setGlobal({ currentuser: {} });
+
 
 async function getPosts() {
   let tmp_posts = new Array();
@@ -34,7 +36,7 @@ async function getPosts() {
       content: doc.data().content,
       created_at: doc.data().created_at,
       channelId: doc.data().channelId,
-      thumnailUrl: doc.data().thumnailUrl,
+      thumbnailUrl: doc.data().thumbnailUrl,
       title: doc.data().title,
       post_id: doc.data().post_id,
       channelTitle: doc.data().channelTitle
@@ -44,8 +46,38 @@ async function getPosts() {
   setGlobal({ posts: tmp_posts });
 };
 
-getPosts();
+async function login() {
+  await firebase.auth().signInAnonymously().catch(function (error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    // ...
+  });
+  await firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      // User is signed in.
+      console.log(user);
+      var isAnonymous = user.isAnonymous;
+      var uid = user.uid;
+      let tmp_user = {
+        uid: user.uid,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        isAnonymus: user.isAnonymous,
+      }
+      setGlobal({ currentuser: tmp_user });
+    } else {
+      // User is signed out.
+      // ...
+    }
+    // ...
+  });
 
+}
+
+
+getPosts();
+login();
 
 ReactDOM.render(
   <Router history={history}>
