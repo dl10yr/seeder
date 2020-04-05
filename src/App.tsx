@@ -13,6 +13,7 @@ import PostsList from './containers/PostsList';
 import PostsDetail from './containers/PostsDetail';
 import New from './containers/New';
 import ResponsiveDrawer from './containers/ResponsiveDrawer';
+import Notification from './containers/Notification';
 
 
 
@@ -22,6 +23,7 @@ function App() {
 
 
       <div className="App">
+        <Notification />
         <ResponsiveDrawer>
           <Switch>
             <Route exact path="/" component={Top} />

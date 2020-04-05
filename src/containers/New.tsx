@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles, createStyles, Theme, useTheme } from '@material-ui/core/styles';
+import { store } from '../store';
 import MovieForm from '../components/MovieForm'
 import ContentForm from '../components/ContentForm'
 import { useGlobal } from "reactn";
@@ -35,13 +36,15 @@ const useStyles = makeStyles((theme: Theme) =>
     content: {
     },
     liimg: {
+      display: "inline-block",
+      margin: theme.spacing(1),
+      width: "80px",
     },
     button_wrapper: {
       textAlign: 'center',
       marginTop: "20px"
     },
     field: {
-      width: '70%',
       textAlign: 'center',
       '& label.Mui-focused': {
         color: 'green',
@@ -85,8 +88,12 @@ const useStyles = makeStyles((theme: Theme) =>
       background: '#2dd57a',
       borderRadius: '5px',
       borderWidth: '0',
-
     },
+    liinfo: {
+      display: 'inline-block',
+      verticalAlign: 'Top',
+      margin: theme.spacing(1)
+    }
   })
 );
 
@@ -104,6 +111,7 @@ type FormData = {
 const New: React.FC<Props> = props => {
   const classes = useStyles();
   const theme = useTheme();
+  const { state, dispatch } = useContext(store);
   const [page, setPage] = useState(1);
   const [currentuser, setCurrentuser] = useGlobal("currentuser");
   const { register, errors, handleSubmit, reset } = useForm<FormData>({
@@ -114,10 +122,10 @@ const New: React.FC<Props> = props => {
   const [moviedata, setMoviedata] = useState({
     title: "",
     channelId: "",
-    thumbnails: { medium: { url: "" } },
+    thumbnailUrl: "",
     channelTitle: "",
-    post_id: "",
     tags: new Array(),
+    url: "https://www.youtube.com/watch?v=",
   });
   const nextPage = (value) => {
     const movie_url = value.split('/')
@@ -129,10 +137,15 @@ const New: React.FC<Props> = props => {
     const url = `https://www.googleapis.com/youtube/v3/videos?id=${movie_id}&key=${YOUTUBE_API_KEY}&part=snippet`;
     axios.get(url)
       .then((response) => {
-        const movie_data = response.data.items[0]
-        const movie_title = movie_data.snippet.title
-        console.log(movie_data)
-        setMoviedata(movie_data.snippet)
+        let movie_data = {
+          title: response.data.items[0].snippet.title,
+          channelId: response.data.items[0].snippet.channelId,
+          thumbnailUrl: response.data.items[0].snippet.thumbnails.medium.url,
+          channelTitle: response.data.items[0].snippet.channelTitle,
+          tags: response.data.items[0].snippet.tags,
+          url: "https://www.youtube.com/watch?v=" + response.data.items[0].id,
+        }
+        setMoviedata(movie_data)
       })
       .catch((error) => {
         // console.log(error)
@@ -147,9 +160,6 @@ const New: React.FC<Props> = props => {
       })
 
     setPage(2);
-
-    console.log(moviedata)
-    console.log(data)
   };
 
   function getUniqueStr() {
@@ -164,7 +174,7 @@ const New: React.FC<Props> = props => {
     const title = moviedata.title
     const channelId = moviedata.channelId
     const channelTitle = moviedata.channelTitle
-    const thumbnailUrl = moviedata.thumbnails.medium.url
+    const thumbnailUrl = moviedata.thumbnailUrl
     const tags = moviedata.tags
     const url = data.url
     const content = values.content
@@ -185,9 +195,11 @@ const New: React.FC<Props> = props => {
       })
       .then(() => {
         reset();
-
+        setPage(1);
+        dispatch({ type: 'SET_NOTIFICATION', variant: 'success', message: '送信に成功しました' });
       })
       .catch(() => {
+        dispatch({ type: 'SET_NOTIFICATION', variant: 'fail', message: '送信に失敗しました' });
       })
 
   }
@@ -197,63 +209,54 @@ const New: React.FC<Props> = props => {
     <Scrollbars>
       <div className={classes.container}>
         <form onSubmit={handleSubmit(postSubmit)} >
-          <div className={classes.button_wrapper}>
-            <TextField
-              label="YouTube動画URL"
-              type="text"
-              name="url"
-              fullWidth
-              margin="normal"
-              inputRef={register}
-              onBlur={(e) => { nextPage(e.target.value) }}
-              error={Boolean(errors.content)}
-              helperText={errors.content}
-              variant="outlined"
-              className={classes.field}
-            />
-          </div>
-          <div>
+          <TextField
+            label="YouTube動画URL"
+            type="text"
+            name="url"
+            fullWidth
+            margin="normal"
+            inputRef={register}
+            onBlur={(e) => { nextPage(e.target.value) }}
+            error={Boolean(errors.content)}
+            helperText={errors.content}
+            variant="outlined"
+            className={classes.field}
+          />
+          {page === 2 &&
             <Card className={classes.card}>
-              <div className={classes.liimg}>
-                <img src={moviedata.thumbnails.medium.url} width="80" height="45" />
-              </div>
-              <Typography variant="caption" >
-                {moviedata.channelTitle}
-              </Typography>
-              <div className={classes.details}>
-                <CardContent className={classes.content}>
-                  <Typography component="p" style={{ fontWeight: 'bold' }}>
-                    {moviedata.title}
-                  </Typography>
-
-                </CardContent>
+              <img src={moviedata.thumbnailUrl} className={classes.liimg} />
+              <div className={classes.liinfo}>
+                <Typography component="p" style={{ fontWeight: 'bold' }}>
+                  {moviedata.title}
+                </Typography>
+                <Typography variant="caption">
+                  {moviedata.channelTitle}
+                </Typography>
               </div>
             </Card>
-            <div className={classes.button_wrapper}>
-              <TextField
-                label="投稿内容"
-                type="text"
-                name="content"
-                fullWidth
-                margin="normal"
-                rows="10"
-                inputRef={register}
-                multiline
-                error={Boolean(errors.content)}
-                helperText={errors.content && "内容は20文字以上にして下さい。"}
-                variant="outlined"
-                className={classes.field}
-              />
-            </div>
-            <div className={classes.button_wrapper}>
-              <button
-                color="primary"
-                type="submit"
-                className={classes.submitbutton}
-              >
-                投稿
-                </button>
-            </div>
+          }
+          <TextField
+            label="投稿内容"
+            type="text"
+            name="content"
+            fullWidth
+            margin="normal"
+            rows="10"
+            inputRef={register}
+            multiline
+            error={Boolean(errors.content)}
+            helperText={errors.content && "内容は20文字以上にして下さい。"}
+            variant="outlined"
+            className={classes.field}
+          />
+          <div className={classes.button_wrapper}>
+            <button
+              color="primary"
+              type="submit"
+              className={classes.submitbutton}
+            >
+              投稿
+            </button>
           </div>
         </form>
       </div >

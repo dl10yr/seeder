@@ -13,6 +13,7 @@ import thunk from 'redux-thunk'
 import { createStore, applyMiddleware } from 'redux';
 import firebase from 'firebase';
 import { firestore } from './plugins/firebase';
+import { StateProvider } from './store';
 
 // const middlewares = []
 // middlewares.push(thunk)
@@ -80,9 +81,11 @@ getPosts();
 login();
 
 ReactDOM.render(
-  <Router history={history}>
-    <App />
-  </Router>
+  <StateProvider>
+    <Router history={history}>
+      <App />
+    </Router>
+  </StateProvider>
   , document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
