@@ -34,8 +34,8 @@ const StateProvider = ({ children }) => {
         return {
           ...state,
           isOpen: true,
-          variant: state.variant,
-          message: state.message,
+          variant: action.variant,
+          message: action.message,
         };
       case 'CLOSE_NOTIFICATION':
         return {
