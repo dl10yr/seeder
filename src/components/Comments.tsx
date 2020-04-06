@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { makeStyles, createStyles, Theme, useTheme } from '@material-ui/core/styles';
 import { store } from '../store';
-import MovieForm from '../components/MovieForm'
-import ContentForm from '../components/ContentForm'
+import MovieForm from './MovieForm'
+import ContentForm from './ContentForm'
 import { useGlobal } from "reactn";
 import { useForm, Controller } from "react-hook-form";
 
@@ -31,11 +31,6 @@ const useStyles = makeStyles((theme: Theme) =>
     details: {
     },
     content: {
-    },
-    liimg: {
-      display: "inline-block",
-      margin: theme.spacing(1),
-      width: "80px",
     },
     button_wrapper: {
       textAlign: 'center',
@@ -86,16 +81,79 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: '5px',
       borderWidth: '0',
     },
+    li: {
+      background: '#eee',
+    },
+    link: {
+      textDecoration: 'none',
+      color: theme.palette.text.primary,
+    },
+    libody: {
+      padding: theme.spacing(1),
+      minWidth: '288px',
+    },
+    liitem: {
+      display: "inline-block",
+      verticalAlign: 'top',
+    },
+    ul: {
+      listStyle: 'none',
+      paddingLeft: '0px',
+      margin: '10px',
+    },
+    liimg: {
+      display: "inline-block",
+      margin: theme.spacing(1),
+      width: "80px",
+    },
+    licontent: {
+      width: '100%',
+      fontWeight: 'bold',
+      margin: `0 ${theme.spacing(1)}`,
+      wordWrap: 'break-word',
+    },
     liinfo: {
       display: 'inline-block',
       verticalAlign: 'Top',
-      margin: theme.spacing(1)
+      width: `calc(100% - 120px)`,
+    },
+    title: {
+
+    },
+    channelTitle: {
+
     }
   })
 );
+type Comment = {
+  content: string,
+  created_at: Date,
+  user_id: string,
+  post_id: string,
+  comment_id: string,
+}
+
+type Post = {
+  content: string,
+  title: string,
+  created_at: Date,
+  channelId: string,
+  post_id: string,
+  channelTitle: string,
+  thumbnailUrl: string,
+  comments: Comment[],
+}
+
+type Commentslist = {
+  comments: Comment[],
+  isLoading: boolean,
+  startDate: Date,
+  endDate: Date
+}
 
 interface Props {
   post_id: string,
+  commentslist: Commentslist,
 }
 
 type FormData = {
@@ -104,15 +162,14 @@ type FormData = {
   field: string,
 };
 
-const CommentForm: React.FC<Props> = props => {
+const Comments: React.FC<Props> = props => {
   const classes = useStyles();
   const post_id = props;
   const theme = useTheme();
   const { state, dispatch } = useContext(store);
   const [currentuser, setCurrentuser] = useGlobal("currentuser");
-  const { register, errors, handleSubmit, reset } = useForm<FormData>({
-    mode: 'onBlur',
-  });
+  const { register, errors, handleSubmit, reset } = useForm<FormData>({});
+  const [displaycomments, setDisplaycomments] = useState(props.commentslist.comments);
 
   function getUniqueStr() {
     var strong = 1000;
@@ -126,17 +183,21 @@ const CommentForm: React.FC<Props> = props => {
     const post_id = props.post_id;
     const content = values.content;
     const comment_id = getUniqueStr();
+    const post_data = {
+      post_id: post_id,
+      created_at: new Date(),
+      content: content,
+      user_id: currentuser.uid,
+      comment_id: comment_id
+    };
+    var tmp_list = displaycomments
+    tmp_list.unshift(post_data);
 
     firestore.collection('comments')
-      .add({
-        post_id: post_id,
-        created_at: new Date(),
-        content: content,
-        user_id: currentuser.uid,
-        comment_id: comment_id
-      })
+      .add(post_data)
       .then(() => {
         reset();
+        setDisplaycomments(tmp_list);
         dispatch({ type: 'SET_NOTIFICATION', variant: 'success', message: '送信に成功しました' });
       })
       .catch(() => {
@@ -171,9 +232,20 @@ const CommentForm: React.FC<Props> = props => {
             </button>
         </div>
       </form>
+      <ul className={classes.ul}>
+        {displaycomments.map(comment => (
+          <li className={classes.li}>
+            <div className={classes.libody}>
+              <Typography component="p" className={classes.licontent}>
+                {comment.content}
+              </Typography>
+            </div>
+          </li >
+        ))}
+      </ul >
     </div >
 
   )
 };
 
-export default CommentForm;
+export default Comments;

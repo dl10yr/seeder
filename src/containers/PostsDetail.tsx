@@ -10,8 +10,8 @@ import { Scrollbars } from 'react-custom-scrollbars';
 
 import firebase from 'firebase';
 import { firestore } from '../plugins/firebase';
-import CommentForm from '../components/CommentForm';
-import CommentsList from '../components/CommentsList';
+import Comments from '../components/Comments';
+import YouTube from 'react-youtube';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -94,7 +94,7 @@ const PostsDetail: React.FC<Props> = props => {
     channelId: string,
     channelTitle: string,
     thumbnailUrl: string,
-
+    video_id: string,
   }
   type Comment = {
     content: string,
@@ -127,6 +127,7 @@ const PostsDetail: React.FC<Props> = props => {
     channelId: "",
     channelTitle: "",
     thumbnailUrl: "",
+    video_id: ""
   });
 
   const [commentslist, setCommentslist] = useState<Commentslist>({
@@ -136,12 +137,21 @@ const PostsDetail: React.FC<Props> = props => {
     isLoading: false,
   });
 
+  const opts = {
+    height: '390',
+    width: '640',
+    playerVars: {
+      autoplay: 1
+    }
+  };
+
   async function getComments(post_id) {
     let tmp_comments = new Array();
     let start_date = new Date();
     let end_date = new Date();
     const snapShot = await firestore.collection('comments')
       .where('post_id', '==', post_id)
+      .orderBy('created_at', 'desc')
       .limit(10)
       .get()
     snapShot.forEach(doc => {
@@ -176,7 +186,8 @@ const PostsDetail: React.FC<Props> = props => {
           thumbnailUrl: doc.data().thumbnailUrl,
           title: doc.data().title,
           post_id: doc.data().post_id,
-          channelTitle: doc.data().channelTitle
+          channelTitle: doc.data().channelTitle,
+          video_id: doc.data().video_id,
         }
         setDisplaypost(data);
         getComments(props.match.params.id);
@@ -199,7 +210,11 @@ const PostsDetail: React.FC<Props> = props => {
       <div className={classes.textLeft}>
         <Paper className={classes.root} elevation={1}>
           <div className={classes.liimg}>
-            <img src={displaypost.thumbnailUrl} width="240" height="135" />
+            {/* <img src={displaypost.thumbnailUrl} width="240" height="135" /> */}
+            <YouTube
+              videoId={displaypost.video_id}
+              opts={{ height: '270', width: '480' }}
+            />
           </div>
           <Typography component="p" className={classes.title}>
             {displaypost.title}
@@ -218,9 +233,7 @@ const PostsDetail: React.FC<Props> = props => {
           </Typography>
         </Paper>
       </div>
-      <CommentForm post_id={props.match.params.id} />
-      <CommentsList commentslist={commentslist} />
-
+      <Comments post_id={props.match.params.id} commentslist={commentslist} />
     </Scrollbars >
 
   );

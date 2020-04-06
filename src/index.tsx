@@ -43,7 +43,8 @@ async function getPosts() {
       thumbnailUrl: doc.data().thumbnailUrl,
       title: doc.data().title,
       post_id: doc.data().post_id,
-      channelTitle: doc.data().channelTitle
+      channelTitle: doc.data().channelTitle,
+      video_id: doc.data().video_id,
     }
     tmp_posts.push(post);
   })

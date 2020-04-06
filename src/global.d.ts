@@ -10,6 +10,7 @@ declare module "reactn/default" {
     post_id: string,
     channelTitle: string,
     thumbnailUrl: string,
+    video_id: string,
   }
   type User = {
     uid: string,

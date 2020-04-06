@@ -118,14 +118,13 @@ const New: React.FC<Props> = props => {
     mode: 'onBlur',
   });
 
-  const [data, setData] = useState({ url: "" });
   const [moviedata, setMoviedata] = useState({
     title: "",
     channelId: "",
     thumbnailUrl: "",
     channelTitle: "",
     tags: new Array(),
-    url: "https://www.youtube.com/watch?v=",
+    video_id: "",
   });
   const nextPage = (value) => {
     const movie_url = value.split('/')
@@ -143,7 +142,7 @@ const New: React.FC<Props> = props => {
           thumbnailUrl: response.data.items[0].snippet.thumbnails.medium.url,
           channelTitle: response.data.items[0].snippet.channelTitle,
           tags: response.data.items[0].snippet.tags,
-          url: "https://www.youtube.com/watch?v=" + response.data.items[0].id,
+          video_id: response.data.items[0].id,
         }
         setMoviedata(movie_data)
       })
@@ -176,7 +175,7 @@ const New: React.FC<Props> = props => {
     const channelTitle = moviedata.channelTitle
     const thumbnailUrl = moviedata.thumbnailUrl
     const tags = moviedata.tags
-    const url = data.url
+    const video_id = moviedata.video_id
     const content = values.content
     const post_id = getUniqueStr();
 
@@ -190,7 +189,7 @@ const New: React.FC<Props> = props => {
         thumbnailUrl: thumbnailUrl,
         post_id: post_id,
         uid: currentuser.uid,
-        url: url,
+        video_id: video_id,
         tags: tags,
       })
       .then(() => {
