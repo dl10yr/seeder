@@ -18,8 +18,14 @@ declare module "reactn/default" {
     isAnonymus: boolean,
   }
 
+  type Postslist = {
+    posts: Post[],
+    isLoading: boolean,
+    startDate: Date,
+    endDate: Date
+  }
   export interface State {
-    posts: Post[];
+    postslist: Postslist;
     currentuser: User;
   }
 }

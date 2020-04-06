@@ -14,6 +14,7 @@ import { createStore, applyMiddleware } from 'redux';
 import firebase from 'firebase';
 import { firestore } from './plugins/firebase';
 import { StateProvider } from './store';
+import { getHeapCodeStatistics } from "v8";
 
 // const middlewares = []
 // middlewares.push(thunk)
@@ -22,12 +23,14 @@ const history = createBrowserHistory();
 /*const store = createStore(
    applyMiddleware(thunk) 
 ) */
-setGlobal({ posts: [] });
+setGlobal({ postslist: { posts: [], isLoading: false, startDate: new Date(), endDate: new Date() } });
 setGlobal({ currentuser: {} });
 
 
 async function getPosts() {
   let tmp_posts = new Array();
+  let start_date = new Date();
+  let end_date = new Date();
   const snapShot = await firestore.collection('posts')
     .orderBy('created_at', 'desc')
     .limit(10)
@@ -44,7 +47,9 @@ async function getPosts() {
     }
     tmp_posts.push(post);
   })
-  setGlobal({ posts: tmp_posts });
+  start_date = tmp_posts[0].created_at;
+  end_date = tmp_posts.slice(-1)[0].created_at;
+  setGlobal({ postslist: { posts: tmp_posts, startDate: start_date, endDate: end_date, isLoading: false } });
 };
 
 async function login() {
@@ -76,9 +81,8 @@ async function login() {
 
 }
 
-
-getPosts();
 login();
+getPosts();
 
 ReactDOM.render(
   <StateProvider>

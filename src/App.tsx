@@ -9,7 +9,7 @@ import Info from './containers/Info';
 import Top from './containers/Top';
 
 import Login from './containers/Login';
-import PostsList from './containers/PostsList';
+import Posts from './containers/Posts';
 import PostsDetail from './containers/PostsDetail';
 import New from './containers/New';
 import ResponsiveDrawer from './containers/ResponsiveDrawer';
@@ -29,7 +29,7 @@ function App() {
             <Route exact path="/" component={Top} />
             <Route path="/login" component={Login} />
             <Route path="/info" component={Info} />
-            <Route path="/postslist" component={PostsList} />
+            <Route exact path="/posts" component={Posts} />
             <Route exact path="/new" component={New} />
             <Route exact path="/posts/:id" component={PostsDetail} />
           </Switch>

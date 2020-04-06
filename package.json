@@ -24,6 +24,7 @@
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.13.0",
     "react-hook-form": "^5.1.3",
+    "react-infinite-scroll-component": "^5.0.4",
     "react-redux": "^7.2.0",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",

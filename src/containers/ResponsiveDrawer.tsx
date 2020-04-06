@@ -149,7 +149,7 @@ const Responsivedrawer: React.FC<Props> = props => {
       </List>
       <List>
         <ResponsiveDrawerListItem
-          to="/postslist"
+          to="/posts"
           onClick={closeDrawerNav}
           icon={<ViewListIcon />}
           text="投稿一覧"

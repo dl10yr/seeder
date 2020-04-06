@@ -10,6 +10,9 @@ import { Scrollbars } from 'react-custom-scrollbars';
 
 import firebase from 'firebase';
 import { firestore } from '../plugins/firebase';
+import CommentForm from '../components/CommentForm';
+import CommentsList from '../components/CommentsList';
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,9 +29,9 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: 10,
     },
     title: {
-      fontWeight: 'bold',
       wordWrap: 'break-word',
-      margin: theme.spacing(2),
+      fontSize: "0.8rem",
+      margin: theme.spacing(1),
     },
     button: {
       margin: theme.spacing(1),
@@ -40,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
     content: {
       wordWrap: 'break-word',
       fontWeight: 'bold',
-      margin: "30px"
+      margin: theme.spacing(1),
     },
     twitterbutton: {
       margin: '20px'
@@ -67,6 +70,12 @@ const useStyles = makeStyles((theme: Theme) =>
     liimg: {
       textAlign: 'center',
     },
+    channelTitle: {
+      textAlign: 'right',
+      marginRight: theme.spacing(1),
+      wordWrap: 'break-word',
+      fontSize: "0.8rem",
+    }
   })
 );
 
@@ -87,13 +96,28 @@ const PostsDetail: React.FC<Props> = props => {
     thumbnailUrl: string,
 
   }
+  type Comment = {
+    content: string,
+    created_at: Date,
+    user_id: string,
+    post_id: string,
+    comment_id: string,
+  }
   type Posts = {
     posts: Post[],
     tmp_posts: Post[],
     fetch_posts: Post[],
   }
+
+  type Commentslist = {
+    comments: Comment[],
+    isLoading: boolean,
+    startDate: Date,
+    endDate: Date
+  }
+
   // const [posts, setPosts] = useState<Post[]>([]);
-  const [posts, setPosts] = useGlobal("posts");
+  const [postslist, setPostslist] = useGlobal("postslist");
   const [currentuser, setCurrentuser] = useGlobal("currentuser");
 
   const [displaypost, setDisplaypost] = useState<Post>({
@@ -105,8 +129,40 @@ const PostsDetail: React.FC<Props> = props => {
     thumbnailUrl: "",
   });
 
+  const [commentslist, setCommentslist] = useState<Commentslist>({
+    comments: new Array(),
+    startDate: new Date(0),
+    endDate: new Date(0),
+    isLoading: false,
+  });
+
+  async function getComments(post_id) {
+    let tmp_comments = new Array();
+    let start_date = new Date();
+    let end_date = new Date();
+    const snapShot = await firestore.collection('comments')
+      .where('post_id', '==', post_id)
+      .limit(10)
+      .get()
+    snapShot.forEach(doc => {
+      let comment = {
+        content: doc.data().content,
+        created_at: doc.data().created_at,
+        post_id: doc.data().post_id,
+        user_id: doc.data().user_id,
+      }
+      tmp_comments.push(comment);
+    })
+    if (tmp_comments.length > 0) {
+      start_date = tmp_comments[0].created_at;
+      end_date = tmp_comments.slice(-1)[0].created_at;
+    }
+
+    setCommentslist({ comments: tmp_comments, startDate: start_date, endDate: end_date, isLoading: false });
+  };
+
   async function selectPosts() {
-    var index = posts.findIndex(({ post_id }) => post_id === props.match.params.id);
+    var index = postslist.posts.findIndex(({ post_id }) => post_id === props.match.params.id);
     if (index === -1) {
       const snapShot = await firestore.collection('posts')
         .where('post_id', '==', props.match.params.id)
@@ -123,9 +179,12 @@ const PostsDetail: React.FC<Props> = props => {
           channelTitle: doc.data().channelTitle
         }
         setDisplaypost(data);
+        getComments(props.match.params.id);
       })
+
     } else {
-      setDisplaypost(posts[index]);
+      setDisplaypost(postslist.posts[index]);
+      getComments(props.match.params.id);
     }
   };
 
@@ -142,8 +201,11 @@ const PostsDetail: React.FC<Props> = props => {
           <div className={classes.liimg}>
             <img src={displaypost.thumbnailUrl} width="240" height="135" />
           </div>
-          <Typography variant="subtitle1" className={classes.title}>
+          <Typography component="p" className={classes.title}>
             {displaypost.title}
+          </Typography>
+          <Typography component="p" className={classes.channelTitle}>
+            {displaypost.channelTitle}
           </Typography>
           <Typography component="p" className={classes.content}>
             {displaypost.content}
@@ -156,6 +218,9 @@ const PostsDetail: React.FC<Props> = props => {
           </Typography>
         </Paper>
       </div>
+      <CommentForm post_id={props.match.params.id} />
+      <CommentsList commentslist={commentslist} />
+
     </Scrollbars >
 
   );
