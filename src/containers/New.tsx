@@ -145,20 +145,10 @@ const New: React.FC<Props> = props => {
           video_id: response.data.items[0].id,
         }
         setMoviedata(movie_data)
+        setPage(2);
       })
       .catch((error) => {
-        // console.log(error)
-        // var str = error.response.data.exception
-        // this.props.actions.setNotification('error', '送信に失敗しました。投稿内容が既に存在しているかもしれません。');
-
-        // if (str.indexOf("RecordNotUnique") !== -1) {
-        //   this.props.actions.setNotification('error', '投稿内容が既に存在しています。');
-        // } else {
-        //   this.props.actions.setNotification('error', '送信に失敗しました');
-        // }
       })
-
-    setPage(2);
   };
 
   function getUniqueStr() {
@@ -198,7 +188,7 @@ const New: React.FC<Props> = props => {
         dispatch({ type: 'SET_NOTIFICATION', variant: 'success', message: '送信に成功しました' });
       })
       .catch(() => {
-        dispatch({ type: 'SET_NOTIFICATION', variant: 'fail', message: '送信に失敗しました' });
+        dispatch({ type: 'SET_NOTIFICATION', variant: 'error', message: '送信に失敗しました' });
       })
 
   }

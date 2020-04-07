@@ -21,6 +21,12 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingBottom: theme.spacing(1),
       margin: 10,
     },
+    container: {
+      [theme.breakpoints.up('md')]: {
+        width: `600px`,
+      },
+      width: '100%'
+    },
     textLeft: {
       textAlign: 'left',
     },
@@ -207,13 +213,13 @@ const PostsDetail: React.FC<Props> = props => {
 
   return (
     <Scrollbars>
-      <div className={classes.textLeft}>
+      <div className={classes.container}>
         <Paper className={classes.root} elevation={1}>
           <div className={classes.liimg}>
             {/* <img src={displaypost.thumbnailUrl} width="240" height="135" /> */}
             <YouTube
               videoId={displaypost.video_id}
-              opts={{ height: '270', width: '480' }}
+              opts={{ height: '27%', width: '48%' }}
             />
           </div>
           <Typography component="p" className={classes.title}>
@@ -232,10 +238,10 @@ const PostsDetail: React.FC<Props> = props => {
           <Typography component="p" style={{ fontWeight: 'bold' }}>
           </Typography>
         </Paper>
-      </div>
-      <Comments post_id={props.match.params.id} commentslist={commentslist} />
-    </Scrollbars >
+        <Comments post_id={props.match.params.id} commentslist={commentslist} />
 
+      </div>
+    </Scrollbars >
   );
 }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import { useGlobal } from "reactn";
 import { makeStyles, createStyles, Theme, useTheme } from '@material-ui/core/styles';
@@ -12,14 +12,18 @@ import firebase from 'firebase';
 import { firestore } from '../plugins/firebase';
 import { Link, withRouter } from 'react-router-dom';
 import PostsList from '../components/PostsList';
+import { store } from '../store';
+
+import { useForm, Controller } from "react-hook-form";
+import axios from 'axios'
+
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       textAlign: 'center'
-    },
-    paragraph: {
-      fontFamily: 'serif',
     },
     li: {
       background: '#eee',
@@ -62,7 +66,25 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     channelTitle: {
 
-    }
+    },
+    submitbutton: {
+      margin: '10px',
+      padding: '10px',
+      width: '80%',
+      height: '8%',
+      textAlign: 'center',
+      textDecoration: 'none',
+      fontWeight: 'bold',
+      fontSize: 'large',
+      color: 'whitesmoke',
+      background: 'black',
+      borderRadius: '5px',
+      borderWidth: '0',
+    },
+    button_wrapper: {
+      textAlign: 'center',
+      marginTop: "20px"
+    },
   })
 );
 
@@ -75,6 +97,7 @@ const Posts: React.FC<Props> = props => {
   const classes = useStyles();
   const [postslist, setPostslist] = useGlobal("postslist");
   const [currentuser, setCurrentuser] = useGlobal("currentuser");
+  const { state, dispatch } = useContext(store);
 
 
 
@@ -99,8 +122,13 @@ const Posts: React.FC<Props> = props => {
       }
       tmp_posts.push(post);
     })
-    end_date = tmp_posts.slice(-1)[0].created_at;
-    setPostslist({ posts: (postslist.posts || []).concat(tmp_posts), endDate: end_date, isLoading: false, startDate: postslist.startDate });
+    console.log(tmp_posts)
+    if (tmp_posts.length != 0) {
+      end_date = tmp_posts.slice(-1)[0].created_at;
+      setPostslist({ posts: (postslist.posts || []).concat(tmp_posts), endDate: end_date, isLoading: false, startDate: postslist.startDate });
+    } else {
+      dispatch({ type: 'SET_NOTIFICATION', variant: 'error', message: 'データがありません' });
+    }
   }
 
   return (
@@ -127,9 +155,11 @@ const Posts: React.FC<Props> = props => {
           </Link>
         ))}
       </ul >
-      <button onClick={() => { getNextPosts(); }}>
-        もっと見る
-      </button>
+      <div className={classes.button_wrapper}>
+        <button onClick={() => { getNextPosts(); }} className={classes.submitbutton}>
+          もっと見る
+        </button>
+      </div>
     </Scrollbars>
 
   );

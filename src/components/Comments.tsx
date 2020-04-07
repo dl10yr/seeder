@@ -34,9 +34,13 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     button_wrapper: {
       textAlign: 'center',
-      marginTop: "20px"
+      margin: "10px",
+      marginTop: '20px',
+      width: "20%",
+      display: 'inline-block',
     },
     field: {
+      width: '70%',
       textAlign: 'center',
       '& label.Mui-focused': {
         color: 'green',
