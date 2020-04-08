@@ -87,7 +87,7 @@ const Posts: React.FC<Props> = props => {
     snapShot.forEach(doc => {
       let post = {
         content: doc.data().content,
-        created_at: doc.data().created_at,
+        created_at: doc.data().created_at.doDate(),
         channelId: doc.data().channelId,
         thumbnailUrl: doc.data().thumbnailUrl,
         title: doc.data().title,
@@ -113,7 +113,7 @@ const Posts: React.FC<Props> = props => {
     snapShot.forEach(doc => {
       let post = {
         content: doc.data().content,
-        created_at: doc.data().created_at,
+        created_at: doc.data().created_at.toDate(),
         channelId: doc.data().channelId,
         thumbnailUrl: doc.data().thumbnailUrl,
         title: doc.data().title,

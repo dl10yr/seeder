@@ -129,7 +129,7 @@ const PostsDetail: React.FC<Props> = props => {
   const [displaypost, setDisplaypost] = useState<Post>({
     content: "",
     title: "",
-    created_at: new Date(),
+    created_at: new Date(0),
     channelId: "",
     channelTitle: "",
     thumbnailUrl: "",
@@ -152,6 +152,8 @@ const PostsDetail: React.FC<Props> = props => {
   };
 
   async function getComments(post_id) {
+    console.log("sss")
+    console.log(post_id);
     let tmp_comments = new Array();
     let start_date = new Date();
     let end_date = new Date();
@@ -163,17 +165,19 @@ const PostsDetail: React.FC<Props> = props => {
     snapShot.forEach(doc => {
       let comment = {
         content: doc.data().content,
-        created_at: doc.data().created_at,
+        created_at: doc.data().created_at.toDate(),
         post_id: doc.data().post_id,
         user_id: doc.data().user_id,
       }
+
       tmp_comments.push(comment);
     })
+    console.log(tmp_comments);
     if (tmp_comments.length > 0) {
       start_date = tmp_comments[0].created_at;
       end_date = tmp_comments.slice(-1)[0].created_at;
     }
-
+    console.log("comments");
     setCommentslist({ comments: tmp_comments, startDate: start_date, endDate: end_date, isLoading: false });
   };
 
@@ -187,7 +191,7 @@ const PostsDetail: React.FC<Props> = props => {
       snapShot.forEach(doc => {
         let data = {
           content: doc.data().content,
-          created_at: doc.data().created_at,
+          created_at: doc.data().created_at.toDate(),
           channelId: doc.data().channelId,
           thumbnailUrl: doc.data().thumbnailUrl,
           title: doc.data().title,
@@ -196,18 +200,20 @@ const PostsDetail: React.FC<Props> = props => {
           video_id: doc.data().video_id,
         }
         setDisplaypost(data);
-        getComments(props.match.params.id);
       })
 
     } else {
       setDisplaypost(postslist.posts[index]);
-      getComments(props.match.params.id);
+      console.log("comments");
+
     }
   };
 
 
   useEffect(() => {
     selectPosts();
+    getComments(props.match.params.id);
+
     console.log(currentuser);
   }, []);
 

@@ -13,6 +13,8 @@ import { firestore } from '../plugins/firebase';
 import { Link, withRouter } from 'react-router-dom';
 import PostsList from '../components/PostsList';
 import { store } from '../store';
+import moment from 'moment';
+import 'moment/locale/ja';
 
 import { useForm, Controller } from "react-hook-form";
 import axios from 'axios'
@@ -44,6 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
       listStyle: 'none',
       paddingLeft: '0px',
       margin: '10px',
+      maxWidth: '600px'
     },
     liimg: {
       display: "inline-block",
@@ -83,7 +86,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     button_wrapper: {
       textAlign: 'center',
-      marginTop: "20px"
+      marginTop: "20px",
+      maxWidth: '600px'
     },
   })
 );
@@ -113,7 +117,7 @@ const Posts: React.FC<Props> = props => {
     snapShot.forEach(doc => {
       let post = {
         content: doc.data().content,
-        created_at: doc.data().created_at,
+        created_at: doc.data().created_at.toDate(),
         channelId: doc.data().channelId,
         thumbnailUrl: doc.data().thumbnailUrl,
         title: doc.data().title,
@@ -150,6 +154,7 @@ const Posts: React.FC<Props> = props => {
                 <Typography component="p" className={classes.licontent}>
                   {(post.content.length <= 20) ? post.content : post.content.substr(0, 20) + "..."}
                 </Typography>
+                <small>{moment(post.created_at).fromNow()}</small>
               </div>
             </li >
           </Link>

@@ -29,7 +29,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     container: {
       padding: '20px',
-      width: '90%'
+      width: '90%',
+      maxWidth: '600px'
     },
     details: {
     },
@@ -114,9 +115,7 @@ const New: React.FC<Props> = props => {
   const { state, dispatch } = useContext(store);
   const [page, setPage] = useState(1);
   const [currentuser, setCurrentuser] = useGlobal("currentuser");
-  const { register, errors, handleSubmit, reset } = useForm<FormData>({
-    mode: 'onBlur',
-  });
+  const { register, errors, handleSubmit, reset } = useForm<FormData>();
 
   const [moviedata, setMoviedata] = useState({
     title: "",
@@ -204,10 +203,10 @@ const New: React.FC<Props> = props => {
             name="url"
             fullWidth
             margin="normal"
-            inputRef={register}
             onBlur={(e) => { nextPage(e.target.value) }}
-            error={Boolean(errors.content)}
-            helperText={errors.content}
+            inputRef={register({ required: true, maxLength: 20 })}
+            error={Boolean(errors.url)}
+            helperText={errors.url && "YouTube動画のURLを入力してください"}
             variant="outlined"
             className={classes.field}
           />
@@ -231,7 +230,7 @@ const New: React.FC<Props> = props => {
             fullWidth
             margin="normal"
             rows="10"
-            inputRef={register}
+            inputRef={register({ required: true, maxLength: 20 })}
             multiline
             error={Boolean(errors.content)}
             helperText={errors.content && "内容は20文字以上にして下さい。"}

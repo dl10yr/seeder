@@ -38,7 +38,7 @@ async function getPosts() {
   snapShot.forEach(doc => {
     let post = {
       content: doc.data().content,
-      created_at: doc.data().created_at,
+      created_at: doc.data().created_at.toDate(),
       channelId: doc.data().channelId,
       thumbnailUrl: doc.data().thumbnailUrl,
       title: doc.data().title,
@@ -48,6 +48,9 @@ async function getPosts() {
     }
     tmp_posts.push(post);
   })
+
+  console.log(tmp_posts);
+
   start_date = tmp_posts[0].created_at;
   end_date = tmp_posts.slice(-1)[0].created_at;
   setGlobal({ postslist: { posts: tmp_posts, startDate: start_date, endDate: end_date, isLoading: false } });
