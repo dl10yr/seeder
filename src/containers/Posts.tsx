@@ -15,7 +15,6 @@ import PostsList from '../components/PostsList';
 import { store } from '../store';
 import moment from 'moment';
 import 'moment/locale/ja';
-
 import { useForm, Controller } from "react-hook-form";
 import axios from 'axios'
 
@@ -102,8 +101,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-  title: string;
-  submitPost: (event: React.FormEvent<HTMLFormElement>) => void
+
 };
 
 const Posts: React.FC<Props> = props => {
