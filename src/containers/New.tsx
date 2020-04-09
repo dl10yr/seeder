@@ -204,7 +204,7 @@ const New: React.FC<Props> = props => {
             fullWidth
             margin="normal"
             onBlur={(e) => { nextPage(e.target.value) }}
-            inputRef={register({ required: true, maxLength: 20 })}
+            inputRef={register({ required: true, })}
             error={Boolean(errors.url)}
             helperText={errors.url && "YouTube動画のURLを入力してください"}
             variant="outlined"
@@ -230,7 +230,7 @@ const New: React.FC<Props> = props => {
             fullWidth
             margin="normal"
             rows="10"
-            inputRef={register({ required: true, maxLength: 20 })}
+            inputRef={register({ required: true, minLength: 20 })}
             multiline
             error={Boolean(errors.content)}
             helperText={errors.content && "内容は20文字以上にして下さい。"}

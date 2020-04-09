@@ -29,6 +29,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     li: {
       background: '#eee',
+      border: 'solid 0.5px whitesmoke',
+      '&:hover': {
+        background: "#c2c2c2",
+      },
     },
     link: {
       textDecoration: 'none',
@@ -46,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
       listStyle: 'none',
       paddingLeft: '0px',
       margin: '10px',
-      maxWidth: '600px'
+      maxWidth: '500px'
     },
     liimg: {
       display: "inline-block",
@@ -62,13 +66,14 @@ const useStyles = makeStyles((theme: Theme) =>
     liinfo: {
       display: 'inline-block',
       verticalAlign: 'Top',
-      width: `calc(100% - 120px)`,
+      width: `calc(100% - 100px)`,
     },
     title: {
+      display: "inline-block",
 
     },
     channelTitle: {
-
+      textAlign: 'right'
     },
     submitbutton: {
       margin: '10px',
@@ -87,8 +92,12 @@ const useStyles = makeStyles((theme: Theme) =>
     button_wrapper: {
       textAlign: 'center',
       marginTop: "20px",
-      maxWidth: '600px'
+      maxWidth: '500px'
     },
+    lidate: {
+      textAlign: 'right',
+      display: 'block',
+    }
   })
 );
 
@@ -145,16 +154,18 @@ const Posts: React.FC<Props> = props => {
                 <img src={post.thumbnailUrl} className={classes.liimg} />
                 <div className={classes.liinfo} >
                   <div className={classes.title} >
-                    <small>{(post.title.length <= 32) ? post.title : post.title.substr(0, 32) + "..."}</small>
+                    <Typography component="p" className={classes.licontent}>
+                      {(post.title.length <= 32) ? post.title : post.title.substr(0, 32) + "..."}
+                    </Typography>
                   </div>
-                  <div className={classes.channelTitle}>
-                    <small>{(post.channelTitle.length <= 16) ? post.channelTitle : post.channelTitle.substr(0, 16) + "..."}</small>
-                  </div>
+                  <Typography component="p" className={classes.channelTitle}>
+                    {(post.channelTitle.length <= 16) ? post.channelTitle : post.channelTitle.substr(0, 16) + "..."}
+                  </Typography>
                 </div>
                 <Typography component="p" className={classes.licontent}>
-                  {(post.content.length <= 20) ? post.content : post.content.substr(0, 20) + "..."}
+                  {(post.content.length <= 30) ? post.content : post.content.substr(0, 30) + "..."}
                 </Typography>
-                <small>{moment(post.created_at).fromNow()}</small>
+                <small className={classes.lidate}>{moment(post.created_at).fromNow()}</small>
               </div>
             </li >
           </Link>
