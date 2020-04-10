@@ -99,8 +99,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-  title: string;
-  submitPost: (event: React.FormEvent<HTMLFormElement>) => void
+  // title: string;
+  // submitPost: (event: React.FormEvent<HTMLFormElement>) => void
 }
 
 type FormData = {
@@ -194,7 +194,7 @@ const New: React.FC<Props> = props => {
 
 
   return (
-    <Scrollbars>
+    <Scrollbars style={{ height: 600 }}>
       <div className={classes.container}>
         <form onSubmit={handleSubmit(postSubmit)} >
           <TextField
