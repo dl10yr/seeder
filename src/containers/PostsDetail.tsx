@@ -36,7 +36,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       wordWrap: 'break-word',
-      fontSize: "0.8rem",
+      fontSize: "1rem",
+      fontWeight: 'bold',
       margin: theme.spacing(1),
     },
     button: {
@@ -48,7 +49,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     content: {
       wordWrap: 'break-word',
-      fontWeight: 'bold',
       margin: theme.spacing(1),
     },
     twitterbutton: {
@@ -80,7 +80,8 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'right',
       marginRight: theme.spacing(1),
       wordWrap: 'break-word',
-      fontSize: "0.8rem",
+      fontSize: "1rem",
+      fontWeight: 'bold',
     }
   })
 );
@@ -225,7 +226,7 @@ const PostsDetail: React.FC<Props> = props => {
             {/* <img src={displaypost.thumbnailUrl} width="240" height="135" /> */}
             <YouTube
               videoId={displaypost.video_id}
-              opts={{ height: '27%', width: '48%' }}
+              opts={{ width: '80%', height: '45%' }}
             />
           </div>
           <Typography component="p" className={classes.title}>

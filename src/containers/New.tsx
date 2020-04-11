@@ -21,17 +21,15 @@ const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      textAlign: 'center'
+    container: {
+      display: 'inline-block',
+      width: '100%',
+      maxWidth: '600px'
     },
     card: {
 
     },
-    container: {
-      padding: '20px',
-      width: '90%',
-      maxWidth: '600px'
-    },
+
     details: {
     },
     content: {
@@ -135,15 +133,27 @@ const New: React.FC<Props> = props => {
     const url = `https://www.googleapis.com/youtube/v3/videos?id=${movie_id}&key=${YOUTUBE_API_KEY}&part=snippet`;
     axios.get(url)
       .then((response) => {
-        let movie_data = {
-          title: response.data.items[0].snippet.title,
-          channelId: response.data.items[0].snippet.channelId,
-          thumbnailUrl: response.data.items[0].snippet.thumbnails.medium.url,
-          channelTitle: response.data.items[0].snippet.channelTitle,
-          tags: response.data.items[0].snippet.tags,
-          video_id: response.data.items[0].id,
+        if (!response.data.items[0].snippet.tags) {
+          let movie_data = {
+            title: response.data.items[0].snippet.title,
+            channelId: response.data.items[0].snippet.channelId,
+            thumbnailUrl: response.data.items[0].snippet.thumbnails.medium.url,
+            channelTitle: response.data.items[0].snippet.channelTitle,
+            tags: [],
+            video_id: response.data.items[0].id
+          }
+          setMoviedata(movie_data)
+        } else {
+          let movie_data = {
+            title: response.data.items[0].snippet.title,
+            channelId: response.data.items[0].snippet.channelId,
+            thumbnailUrl: response.data.items[0].snippet.thumbnails.medium.url,
+            channelTitle: response.data.items[0].snippet.channelTitle,
+            tags: response.data.items[0].snippet.tags,
+            video_id: response.data.items[0].id,
+          }
+          setMoviedata(movie_data)
         }
-        setMoviedata(movie_data)
         setPage(2);
       })
       .catch((error) => {
@@ -168,19 +178,21 @@ const New: React.FC<Props> = props => {
     const content = values.content
     const post_id = getUniqueStr();
 
+    const data = {
+      title: title,
+      created_at: new Date(),
+      content: content,
+      channelId: channelId,
+      channelTitle: channelTitle,
+      thumbnailUrl: thumbnailUrl,
+      post_id: post_id,
+      uid: currentuser.uid,
+      video_id: video_id,
+      tags: tags,
+    }
+    console.log(data)
     firestore.collection('posts')
-      .add({
-        title: title,
-        created_at: new Date(),
-        content: content,
-        channelId: channelId,
-        channelTitle: channelTitle,
-        thumbnailUrl: thumbnailUrl,
-        post_id: post_id,
-        uid: currentuser.uid,
-        video_id: video_id,
-        tags: tags,
-      })
+      .add(data)
       .then(() => {
         reset();
         setPage(1);
@@ -194,8 +206,9 @@ const New: React.FC<Props> = props => {
 
 
   return (
-    <Scrollbars style={{ height: 600 }}>
-      <div className={classes.container}>
+    <div className={classes.container}>
+      <Scrollbars style={{ height: 500, width: 300 }}>
+
         <form onSubmit={handleSubmit(postSubmit)} >
           <TextField
             label="YouTube動画URL"
@@ -247,8 +260,9 @@ const New: React.FC<Props> = props => {
             </button>
           </div>
         </form>
-      </div >
-    </Scrollbars >
+
+      </Scrollbars >
+    </div >
 
   )
 };

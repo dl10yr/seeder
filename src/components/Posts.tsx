@@ -20,9 +20,14 @@ import axios from 'axios'
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import { AutoSizer } from 'react-virtualized';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    container: {
+      display: 'flex',
+      width: '90%'
+    },
     root: {
       textAlign: 'center'
     },
@@ -143,39 +148,48 @@ const Posts: React.FC<Props> = props => {
   }
 
   return (
-    <div>
-      <Scrollbars style={{ height: 300 }}>
-        <ul className={classes.ul}>
-          {postslist.posts.map(post => (
-            <Link to={"/posts/" + post.post_id} className={classes.link} color="inherit">
-              <li className={classes.li}>
-                <div className={classes.libody}>
-                  <img src={post.thumbnailUrl} className={classes.liimg} />
-                  <div className={classes.liinfo} >
-                    <div className={classes.title} >
-                      <Typography component="p" className={classes.licontent}>
-                        {(post.title.length <= 32) ? post.title : post.title.substr(0, 32) + "..."}
-                      </Typography>
-                    </div>
-                    <Typography component="p" className={classes.channelTitle}>
-                      {(post.channelTitle.length <= 16) ? post.channelTitle : post.channelTitle.substr(0, 16) + "..."}
-                    </Typography>
-                  </div>
-                  <Typography component="p" className={classes.licontent}>
-                    {(post.content.length <= 30) ? post.content : post.content.substr(0, 30) + "..."}
-                  </Typography>
-                  <small className={classes.lidate}>{moment(post.created_at).fromNow()}</small>
-                </div>
-              </li >
-            </Link>
-          ))}
-        </ul >
-        <div className={classes.button_wrapper}>
-          <button onClick={() => { getNextPosts(); }} className={classes.submitbutton}>
-            もっと見る
-        </button>
-        </div>
-      </Scrollbars>
+    <div className={classes.container} style={{ width: '100%' }}>
+      <AutoSizer>
+        {({ width, height }) => {
+          return (
+            <Scrollbars
+              style={{ width: width, height: 600 }}
+            >
+              <ul className={classes.ul}>
+                {postslist.posts.map(post => (
+                  <Link to={"/posts/" + post.post_id} className={classes.link} color="inherit">
+                    <li className={classes.li}>
+                      <div className={classes.libody}>
+                        <img src={post.thumbnailUrl} className={classes.liimg} />
+                        <div className={classes.liinfo} >
+                          <div className={classes.title} >
+                            <Typography component="p" className={classes.licontent}>
+                              {(post.title.length <= 32) ? post.title : post.title.substr(0, 32) + "..."}
+                            </Typography>
+                          </div>
+                          <Typography component="p" className={classes.channelTitle}>
+                            {(post.channelTitle.length <= 16) ? post.channelTitle : post.channelTitle.substr(0, 16) + "..."}
+                          </Typography>
+                        </div>
+                        <Typography component="p" className={classes.licontent}>
+                          {(post.content.length <= 30) ? post.content : post.content.substr(0, 30) + "..."}
+                        </Typography>
+                        <small className={classes.lidate}>{moment(post.created_at).fromNow()}</small>
+                      </div>
+                    </li >
+                  </Link>
+                ))}
+              </ul >
+              <div className={classes.button_wrapper}>
+                <button onClick={() => { getNextPosts(); }} className={classes.submitbutton}>
+                  もっと見る
+                </button>
+              </div>
+            </Scrollbars>
+          );
+        }}
+      </AutoSizer>
+
 
     </div>
 
