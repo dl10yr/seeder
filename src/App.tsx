@@ -18,6 +18,8 @@ import Notification from './containers/Notification';
 
 
 function App() {
+
+
   return (
     <Router>
 
@@ -31,7 +33,7 @@ function App() {
             <Route path="/info" component={Info} />
             <Route exact path="/posts" component={Posts} />
             <Route exact path="/new" component={New} />
-            <Route exact path="/posts/:id" component={PostsDetail} />
+            <Route exact key="/posts/:id" path="/posts/:id" component={PostsDetail} />
           </Switch>
         </ResponsiveDrawer>
 

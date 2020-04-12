@@ -54,6 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
         display: 'none',
       },
       color: theme.palette.text.primary
+
     },
     toolbar: theme.mixins.toolbar,
     drawerPaper: {

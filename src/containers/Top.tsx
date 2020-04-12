@@ -9,15 +9,12 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { Scrollbars } from 'react-custom-scrollbars';
-import useResizeObserver from "use-resize-observer";
-import firebase from 'firebase';
-import { firestore } from '../plugins/firebase';
-import { Link, withRouter } from 'react-router-dom';
-import PostsList from '../components/PostsList';
+
 import { store } from '../store';
 import moment from 'moment';
 import 'moment/locale/ja';
 import New from './New';
+import { AutoSizer } from 'react-virtualized';
 
 import { useForm, Controller } from "react-hook-form";
 import axios from 'axios'
@@ -28,19 +25,39 @@ import CardContent from '@material-ui/core/CardContent';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
+      height: "100%",
+      width: '100%'
     },
     new: {
       display: 'inline-block',
-      width: '30%',
+      width: '35%',
+      height: "100%",
       verticalAlign: 'top',
 
     },
     posts: {
-      height: '600px',
-      width: '50%',
+      height: "100%",
+      width: '60%',
       verticalAlign: 'top',
-
-    }
+      display: 'inline-block',
+    },
+    tabs: {
+      borderBottom: '1px solid #e8e8e8',
+    },
+    indicator: {
+      backgroundColor: theme.palette.text.primary
+    },
+    tab: {
+      color: theme.palette.text.primary,
+      '&$selected': {
+        color: '#2dd57a;',
+      },
+      '&:hover': {
+        color: '#2dd57a;',
+        opacity: 1,
+      }
+    },
+    selected: {},
   })
 );
 
@@ -54,17 +71,29 @@ const Top: React.FC<Props> = props => {
   const [currentuser, setCurrentuser] = useGlobal("currentuser");
   const { state, dispatch } = useContext(store);
 
+
+  function handleChange() {
+
+  }
+
   return (
     <div className={classes.container}>
-      <Scrollbars style={{ height: 500 }}>
-        <div className={classes.posts}>
-          <Posts />
-        </div>
-        <div className={classes.new}>
-          <New />
-        </div>
-      </Scrollbars>
-
+      <AutoSizer>
+        {({ width, height }) => {
+          console.log(height)
+          console.log(width)
+          return (
+            <Scrollbars style={{ width: width, height: height }}>
+              <div className={classes.posts}>
+                <Posts />
+              </div>
+              <div className={classes.new}>
+                <New />
+              </div>
+            </Scrollbars>
+          );
+        }}
+      </AutoSizer>
 
     </div>
 

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { makeStyles, createStyles, Theme, useTheme } from '@material-ui/core/styles';
 import { store } from '../store';
 import MovieForm from './MovieForm'
@@ -182,6 +182,37 @@ const Comments: React.FC<Props> = props => {
       Math.floor(strong * Math.random()).toString(16)
     );
   }
+
+  async function getComments(post_id) {
+    var tmp_comments = new Array();
+    var start_date = new Date();
+    var end_date = new Date();
+    const snapShot = await firestore.collection('comments')
+      .where('post_id', '==', post_id)
+      // .orderBy('created_at', 'desc')
+      .limit(10)
+      .get()
+    snapShot.forEach(doc => {
+      var comment = {
+        content: doc.data().content,
+        created_at: doc.data().created_at.toDate(),
+        post_id: doc.data().post_id,
+        user_id: doc.data().user_id,
+      }
+      tmp_comments.push(comment);
+    })
+    if (tmp_comments.length > 0) {
+      start_date = tmp_comments[0].created_at;
+      end_date = tmp_comments.slice(-1)[0].created_at;
+    }
+    console.log(tmp_comments);
+    setDisplaycomments(tmp_comments);
+  };
+
+  useEffect(() => {
+    getComments(props.post_id);
+  }, [props.post_id]);
+
 
   const postSubmit = (values) => {
     const post_id = props.post_id;

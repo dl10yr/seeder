@@ -12,6 +12,11 @@ import firebase from 'firebase';
 import { firestore } from '../plugins/firebase';
 import Comments from '../components/Comments';
 import YouTube from 'react-youtube';
+import { AutoSizer } from 'react-virtualized';
+import PostsDetailCard from '../components/PostsDetailCard';
+import Posts from '../components/Posts';
+
+
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -22,67 +27,22 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: 10,
     },
     container: {
-      [theme.breakpoints.up('md')]: {
-        width: `600px`,
-      },
-      width: '100%'
+      width: '100%',
+      height: '100%'
     },
-    textLeft: {
-      textAlign: 'left',
+    postsdetailcard: {
+      display: 'inline-block',
+      width: '60%',
+      height: "100%",
+      verticalAlign: 'top',
+
     },
-    paragraph: {
-      marginTop: 10,
-      marginBottom: 10,
+    posts: {
+      height: "100%",
+      width: '40%',
+      verticalAlign: 'top',
+      display: 'inline-block',
     },
-    title: {
-      wordWrap: 'break-word',
-      fontSize: "1rem",
-      fontWeight: 'bold',
-      margin: theme.spacing(1),
-    },
-    button: {
-      margin: theme.spacing(1),
-      fontweight: "fontWeightBold",
-    },
-    row: {
-      margin: 10,
-    },
-    content: {
-      wordWrap: 'break-word',
-      margin: theme.spacing(1),
-    },
-    twitterbutton: {
-      margin: '20px'
-    },
-    deletebutton: {
-      float: 'right',
-      margin: '20px',
-      marginTop: '30px'
-    },
-    loginbtn: {
-      margin: '10px',
-      padding: '10px',
-      width: '250px',
-      height: '50px',
-      borderRadius: '5px',
-      textAlign: 'center',
-      textDecoration: 'none',
-      borderWidth: '0',
-      fontWeight: 'bold',
-      fontSize: 'large',
-      color: 'rgb(255, 255, 255)',
-      background: '#00acee',
-    },
-    liimg: {
-      textAlign: 'center',
-    },
-    channelTitle: {
-      textAlign: 'right',
-      marginRight: theme.spacing(1),
-      wordWrap: 'break-word',
-      fontSize: "1rem",
-      fontWeight: 'bold',
-    }
   })
 );
 
@@ -127,128 +87,26 @@ const PostsDetail: React.FC<Props> = props => {
   const [postslist, setPostslist] = useGlobal("postslist");
   const [currentuser, setCurrentuser] = useGlobal("currentuser");
 
-  const [displaypost, setDisplaypost] = useState<Post>({
-    content: "",
-    title: "",
-    created_at: new Date(0),
-    channelId: "",
-    channelTitle: "",
-    thumbnailUrl: "",
-    video_id: ""
-  });
-
-  const [commentslist, setCommentslist] = useState<Commentslist>({
-    comments: new Array(),
-    startDate: new Date(0),
-    endDate: new Date(0),
-    isLoading: false,
-  });
-
-  const opts = {
-    height: '390',
-    width: '640',
-    playerVars: {
-      autoplay: 1
-    }
-  };
-
-  async function getComments(post_id) {
-    console.log("sss")
-    console.log(post_id);
-    let tmp_comments = new Array();
-    let start_date = new Date();
-    let end_date = new Date();
-    const snapShot = await firestore.collection('comments')
-      .where('post_id', '==', post_id)
-      .orderBy('created_at', 'desc')
-      .limit(10)
-      .get()
-    snapShot.forEach(doc => {
-      let comment = {
-        content: doc.data().content,
-        created_at: doc.data().created_at.toDate(),
-        post_id: doc.data().post_id,
-        user_id: doc.data().user_id,
-      }
-
-      tmp_comments.push(comment);
-    })
-    console.log(tmp_comments);
-    if (tmp_comments.length > 0) {
-      start_date = tmp_comments[0].created_at;
-      end_date = tmp_comments.slice(-1)[0].created_at;
-    }
-    console.log("comments");
-    setCommentslist({ comments: tmp_comments, startDate: start_date, endDate: end_date, isLoading: false });
-  };
-
-  async function selectPosts() {
-    var index = postslist.posts.findIndex(({ post_id }) => post_id === props.match.params.id);
-    if (index === -1) {
-      const snapShot = await firestore.collection('posts')
-        .where('post_id', '==', props.match.params.id)
-        .limit(10)
-        .get()
-      snapShot.forEach(doc => {
-        let data = {
-          content: doc.data().content,
-          created_at: doc.data().created_at.toDate(),
-          channelId: doc.data().channelId,
-          thumbnailUrl: doc.data().thumbnailUrl,
-          title: doc.data().title,
-          post_id: doc.data().post_id,
-          channelTitle: doc.data().channelTitle,
-          video_id: doc.data().video_id,
-        }
-        setDisplaypost(data);
-      })
-
-    } else {
-      setDisplaypost(postslist.posts[index]);
-      console.log("comments");
-
-    }
-  };
-
-
-  useEffect(() => {
-    selectPosts();
-    getComments(props.match.params.id);
-
-    console.log(currentuser);
-  }, []);
-
   return (
-    <Scrollbars>
-      <div className={classes.container}>
-        <Paper className={classes.root} elevation={1}>
-          <div className={classes.liimg}>
-            {/* <img src={displaypost.thumbnailUrl} width="240" height="135" /> */}
-            <YouTube
-              videoId={displaypost.video_id}
-              opts={{ width: '80%', height: '45%' }}
-            />
-          </div>
-          <Typography component="p" className={classes.title}>
-            {displaypost.title}
-          </Typography>
-          <Typography component="p" className={classes.channelTitle}>
-            {displaypost.channelTitle}
-          </Typography>
-          <Typography component="p" className={classes.content}>
-            {displaypost.content}
-          </Typography>
-          <Typography component="p" style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
-          </Typography>
-          <Typography component="p" style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
-          </Typography>
-          <Typography component="p" style={{ fontWeight: 'bold' }}>
-          </Typography>
-        </Paper>
-        <Comments post_id={props.match.params.id} commentslist={commentslist} />
+    <div className={classes.container}>
+      <AutoSizer>
+        {({ width, height }) => {
+          console.log(height)
+          console.log(width)
+          return (
+            <Scrollbars style={{ width: width, height: height }}>
+              <div className={classes.postsdetailcard}>
+                <PostsDetailCard post_id={props.match.params.id} />
+              </div>
+              <div className={classes.posts}>
+                <Posts />
+              </div>
 
-      </div>
-    </Scrollbars >
+            </Scrollbars>
+          );
+        }}
+      </AutoSizer>
+    </div>
   );
 }
 

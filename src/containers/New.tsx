@@ -15,6 +15,8 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import { AutoSizer } from 'react-virtualized';
+
 
 const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY
 
@@ -24,7 +26,9 @@ const useStyles = makeStyles((theme: Theme) =>
     container: {
       display: 'inline-block',
       width: '100%',
-      maxWidth: '600px'
+      height: '100%',
+      maxWidth: '600px',
+      margin: theme.spacing(1),
     },
     card: {
 
@@ -207,61 +211,70 @@ const New: React.FC<Props> = props => {
 
   return (
     <div className={classes.container}>
-      <Scrollbars style={{ height: 500, width: 300 }}>
+      <AutoSizer>
+        {({ width, height }) => {
+          console.log(height)
+          console.log(width)
+          return (
+            <Scrollbars style={{ height: height, width: width }}>
 
-        <form onSubmit={handleSubmit(postSubmit)} >
-          <TextField
-            label="YouTube動画URL"
-            type="text"
-            name="url"
-            fullWidth
-            margin="normal"
-            onBlur={(e) => { nextPage(e.target.value) }}
-            inputRef={register({ required: true, })}
-            error={Boolean(errors.url)}
-            helperText={errors.url && "YouTube動画のURLを入力してください"}
-            variant="outlined"
-            className={classes.field}
-          />
-          {page === 2 &&
-            <Card className={classes.card}>
-              <img src={moviedata.thumbnailUrl} className={classes.liimg} />
-              <div className={classes.liinfo}>
-                <Typography component="p" style={{ fontWeight: 'bold' }}>
-                  {moviedata.title}
-                </Typography>
-                <Typography variant="caption">
-                  {moviedata.channelTitle}
-                </Typography>
-              </div>
-            </Card>
-          }
-          <TextField
-            label="投稿内容"
-            type="text"
-            name="content"
-            fullWidth
-            margin="normal"
-            rows="10"
-            inputRef={register({ required: true, minLength: 20 })}
-            multiline
-            error={Boolean(errors.content)}
-            helperText={errors.content && "内容は20文字以上にして下さい。"}
-            variant="outlined"
-            className={classes.field}
-          />
-          <div className={classes.button_wrapper}>
-            <button
-              color="primary"
-              type="submit"
-              className={classes.submitbutton}
-            >
-              投稿
+              <form onSubmit={handleSubmit(postSubmit)} >
+                <TextField
+                  label="YouTube動画URL"
+                  type="text"
+                  name="url"
+                  fullWidth
+                  margin="normal"
+                  onBlur={(e) => { nextPage(e.target.value) }}
+                  inputRef={register({ required: true, })}
+                  error={Boolean(errors.url)}
+                  helperText={errors.url && "YouTube動画のURLを入力してください"}
+                  variant="outlined"
+                  className={classes.field}
+                />
+                {page === 2 &&
+                  <Card className={classes.card}>
+                    <img src={moviedata.thumbnailUrl} className={classes.liimg} />
+                    <div className={classes.liinfo}>
+                      <Typography component="p" style={{ fontWeight: 'bold' }}>
+                        {moviedata.title}
+                      </Typography>
+                      <Typography variant="caption">
+                        {moviedata.channelTitle}
+                      </Typography>
+                    </div>
+                  </Card>
+                }
+                <TextField
+                  label="投稿内容"
+                  type="text"
+                  name="content"
+                  fullWidth
+                  margin="normal"
+                  rows="10"
+                  inputRef={register({ required: true, minLength: 20 })}
+                  multiline
+                  error={Boolean(errors.content)}
+                  helperText={errors.content && "内容は20文字以上にして下さい。"}
+                  variant="outlined"
+                  className={classes.field}
+                />
+                <div className={classes.button_wrapper}>
+                  <button
+                    color="primary"
+                    type="submit"
+                    className={classes.submitbutton}
+                  >
+                    投稿
             </button>
-          </div>
-        </form>
+                </div>
+              </form>
 
-      </Scrollbars >
+            </Scrollbars >
+          );
+        }}
+      </AutoSizer>
+
     </div >
 
   )

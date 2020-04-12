@@ -21,12 +21,14 @@ import axios from 'axios'
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { AutoSizer } from 'react-virtualized';
+import { Route, Switch, Router } from 'react-router-dom';
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
-      display: 'flex',
-      width: '90%'
+      width: '100%',
+      height: '100%'
     },
     root: {
       textAlign: 'center'
@@ -44,7 +46,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     libody: {
       padding: theme.spacing(1),
-      minWidth: '288px',
     },
     liitem: {
       display: "inline-block",
@@ -82,7 +83,6 @@ const useStyles = makeStyles((theme: Theme) =>
     submitbutton: {
       margin: '10px',
       padding: '10px',
-      width: '80%',
       height: '8%',
       textAlign: 'center',
       textDecoration: 'none',
@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme: Theme) =>
     button_wrapper: {
       textAlign: 'center',
       marginTop: "20px",
-      maxWidth: '500px'
+      maxWidth: '500px',
     },
     lidate: {
       textAlign: 'right',
@@ -147,17 +147,52 @@ const Posts: React.FC<Props> = props => {
     }
   }
 
+  async function getNewPosts() {
+    let tmp_posts = new Array();
+    let start_date = postslist.startDate;
+    let end_date = postslist.endDate;
+    const snapShot = await firestore.collection('posts')
+      .where('created_at', '>', start_date)
+      .orderBy('created_at', 'desc')
+      .limit(10)
+      .get()
+    snapShot.forEach(doc => {
+      let post = {
+        content: doc.data().content,
+        created_at: doc.data().created_at.toDate(),
+        channelId: doc.data().channelId,
+        thumbnailUrl: doc.data().thumbnailUrl,
+        title: doc.data().title,
+        post_id: doc.data().post_id,
+        channelTitle: doc.data().channelTitle
+      }
+      tmp_posts.push(post);
+    })
+    console.log(tmp_posts)
+    if (tmp_posts.length != 0) {
+      end_date = tmp_posts.slice(-1)[0].created_at;
+      setPostslist({ posts: (tmp_posts || []).concat(postslist.posts), endDate: end_date, isLoading: false, startDate: postslist.startDate });
+    } else {
+      dispatch({ type: 'SET_NOTIFICATION', variant: 'error', message: 'データがありません' });
+    }
+  }
+
   return (
-    <div className={classes.container} style={{ width: '100%' }}>
+    <div className={classes.container}>
       <AutoSizer>
+
         {({ width, height }) => {
           return (
-            <Scrollbars
-              style={{ width: width, height: 600 }}
-            >
+            <Scrollbars style={{ width: width, height: height }}>
+              <div className={classes.button_wrapper}>
+                <button onClick={() => { getNewPosts(); }} className={classes.submitbutton}>
+                  最新投稿を取得
+              </button>
+              </div>
               <ul className={classes.ul}>
+
                 {postslist.posts.map(post => (
-                  <Link to={"/posts/" + post.post_id} className={classes.link} color="inherit">
+                  <Link key={post.post_id} to={"/posts/" + post.post_id} className={classes.link} color="inherit">
                     <li className={classes.li}>
                       <div className={classes.libody}>
                         <img src={post.thumbnailUrl} className={classes.liimg} />
@@ -179,6 +214,7 @@ const Posts: React.FC<Props> = props => {
                     </li >
                   </Link>
                 ))}
+
               </ul >
               <div className={classes.button_wrapper}>
                 <button onClick={() => { getNextPosts(); }} className={classes.submitbutton}>
@@ -191,7 +227,7 @@ const Posts: React.FC<Props> = props => {
       </AutoSizer>
 
 
-    </div>
+    </div >
 
   );
 }
