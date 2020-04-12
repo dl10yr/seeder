@@ -25,10 +25,10 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       display: 'inline-block',
-      width: '100%',
+      width: '90%',
       height: '100%',
       maxWidth: '600px',
-      margin: theme.spacing(1),
+      padding: theme.spacing(1),
     },
     card: {
 
@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: "20px"
     },
     field: {
+      width: '100%',
       textAlign: 'center',
       '& label.Mui-focused': {
         color: 'green',

@@ -32,16 +32,24 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     postsdetailcard: {
       display: 'inline-block',
-      width: '60%',
-      height: "100%",
+      width: '100%',
+      height: "60%",
+      [theme.breakpoints.up('md')]: {
+        height: "100%",
+        width: '60%',
+      },
       verticalAlign: 'top',
 
     },
     posts: {
-      height: "100%",
-      width: '40%',
+      height: "40%",
+      width: '100%',
       verticalAlign: 'top',
-      display: 'inline-block',
+      display: 'block',
+      [theme.breakpoints.up('md')]: {
+        display: 'inline-block',
+        width: '40%',
+      },
     },
   })
 );

@@ -29,15 +29,20 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%'
     },
     new: {
-      display: 'inline-block',
+      display: 'none',
       width: '35%',
-      height: "100%",
+      height: "95%",
       verticalAlign: 'top',
-
+      [theme.breakpoints.up('md')]: {
+        display: 'inline-block',
+      },
     },
     posts: {
-      height: "100%",
-      width: '60%',
+      height: "95%",
+      width: '100%',
+      [theme.breakpoints.up('md')]: {
+        width: '60%',
+      },
       verticalAlign: 'top',
       display: 'inline-block',
     },
