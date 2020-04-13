@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
       wordWrap: 'break-word',
       fontSize: "1rem",
       fontWeight: 'bold',
-      margin: theme.spacing(1),
+      margin: theme.spacing(2),
     },
     button: {
       margin: theme.spacing(1),
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     content: {
       wordWrap: 'break-word',
-      margin: theme.spacing(1),
+      margin: theme.spacing(2),
     },
     twitterbutton: {
       margin: '20px'
@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     channelTitle: {
       textAlign: 'right',
-      marginRight: theme.spacing(1),
+      marginRight: theme.spacing(2),
       wordWrap: 'break-word',
       fontSize: "1rem",
       fontWeight: 'bold',

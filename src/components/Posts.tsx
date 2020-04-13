@@ -67,6 +67,14 @@ const useStyles = makeStyles((theme: Theme) =>
       fontWeight: 'bold',
       margin: `0 ${theme.spacing(1)}`,
       wordWrap: 'break-word',
+      fontSize: '0.9rem'
+    },
+    lititle: {
+      width: '100%',
+      fontWeight: 'bold',
+      margin: `0 ${theme.spacing(1)}`,
+      wordWrap: 'break-word',
+      fontSize: '1rem'
     },
     liinfo: {
       display: 'inline-block',
@@ -78,12 +86,14 @@ const useStyles = makeStyles((theme: Theme) =>
 
     },
     channelTitle: {
-      textAlign: 'right'
+      textAlign: 'right',
+      fontSize: '0.8rem'
     },
     submitbutton: {
       margin: '10px',
       padding: '10px',
       height: '8%',
+      width: '90%',
       textAlign: 'center',
       textDecoration: 'none',
       fontWeight: 'bold',
@@ -198,7 +208,7 @@ const Posts: React.FC<Props> = props => {
                         <img src={post.thumbnailUrl} className={classes.liimg} />
                         <div className={classes.liinfo} >
                           <div className={classes.title} >
-                            <Typography component="p" className={classes.licontent}>
+                            <Typography component="p" className={classes.lititle}>
                               {(post.title.length <= 32) ? post.title : post.title.substr(0, 32) + "..."}
                             </Typography>
                           </div>

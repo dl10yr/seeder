@@ -9,6 +9,8 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { Link, withRouter } from 'react-router-dom';
+
 
 import { store } from '../store';
 import moment from 'moment';
@@ -21,6 +23,9 @@ import axios from 'axios'
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -63,6 +68,11 @@ const useStyles = makeStyles((theme: Theme) =>
       }
     },
     selected: {},
+    link: {
+      position: 'absolute',
+      bottom: '-20px',
+      right: '10px'
+    }
   })
 );
 
@@ -99,6 +109,11 @@ const Top: React.FC<Props> = props => {
           );
         }}
       </AutoSizer>
+      <Link to="/new" className={classes.link} color="inherit">
+        <Fab color="secondary" aria-label="edit">
+          <EditIcon />
+        </Fab>
+      </Link>
 
     </div>
 

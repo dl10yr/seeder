@@ -11,6 +11,8 @@ import useResizeObserver from "use-resize-observer";
 import firebase from 'firebase';
 import { firestore } from '../plugins/firebase';
 import { Link, withRouter } from 'react-router-dom';
+import moment from 'moment';
+
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -62,6 +64,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     channelTitle: {
 
+    },
+    lidate: {
+      textAlign: 'right',
+      display: 'block',
     }
   })
 );
@@ -111,6 +117,7 @@ const CommentsList: React.FC<Props> = props => {
             <Typography component="p" className={classes.licontent}>
               {comment.content}
             </Typography>
+            <small className={classes.lidate}>{moment(comment.created_at).fromNow()}</small>
           </div>
         </li >
       ))}

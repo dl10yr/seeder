@@ -15,6 +15,8 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import moment from 'moment';
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -126,6 +128,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     channelTitle: {
 
+    },
+    lidate: {
+      textAlign: 'right',
+      display: 'block',
     }
   })
 );
@@ -274,6 +280,7 @@ const Comments: React.FC<Props> = props => {
               <Typography component="p" className={classes.licontent}>
                 {comment.content}
               </Typography>
+              <small className={classes.lidate}>{moment(comment.created_at).fromNow()}</small>
             </div>
           </li >
         ))}

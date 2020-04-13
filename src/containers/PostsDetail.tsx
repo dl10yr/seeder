@@ -49,6 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         display: 'inline-block',
         width: '40%',
+        height: '100%'
       },
     },
   })
