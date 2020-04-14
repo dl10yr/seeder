@@ -173,6 +173,10 @@ const New: React.FC<Props> = props => {
     );
   }
 
+  function getNgram(channelTitle, title, n) {
+
+  }
+
   const postSubmit = (values) => {
     const title = moviedata.title
     const channelId = moviedata.channelId
@@ -182,6 +186,7 @@ const New: React.FC<Props> = props => {
     const video_id = moviedata.video_id
     const content = values.content
     const post_id = getUniqueStr();
+    const search_words = getNgram(channelTitle, title, 2);
 
     const data = {
       title: title,
