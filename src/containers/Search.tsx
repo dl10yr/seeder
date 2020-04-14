@@ -173,31 +173,8 @@ const Search: React.FC<Props> = props => {
     );
   }
 
-  const postSubmit = (values) => {
-    const title = moviedata.title
-    const channelId = moviedata.channelId
-    const channelTitle = moviedata.channelTitle
-    const thumbnailUrl = moviedata.thumbnailUrl
-    const tags = moviedata.tags
-    const video_id = moviedata.video_id
-    const content = values.content
-    const post_id = getUniqueStr();
-    const searchWords = getNgram(channelTitle, title, 2);
-
-    const data = {
-      title: title,
-      created_at: new Date(),
-      content: content,
-      channelId: channelId,
-      channelTitle: channelTitle,
-      thumbnailUrl: thumbnailUrl,
-      post_id: post_id,
-      uid: currentuser.uid,
-      video_id: video_id,
-      tags: tags,
-      searchWords: searchWords,
-    }
-    console.log(data)
+  const search = (values) => {
+    const searchWords = values.searchWords
     firestore.collection('posts')
       .add(data)
       .then(() => {
@@ -216,16 +193,13 @@ const Search: React.FC<Props> = props => {
     <div className={classes.container}>
       <AutoSizer>
         {({ width, height }) => {
-          console.log(height)
-          console.log(width)
           return (
             <Scrollbars style={{ height: height, width: width }}>
-
-              <form onSubmit={handleSubmit(postSubmit)} >
+              <form onSubmit={handleSubmit(search)} >
                 <TextField
-                  label="YouTube動画URL"
+                  label="動画・チャンネル名で探す"
                   type="text"
-                  name="url"
+                  name="searchWords"
                   fullWidth
                   margin="normal"
                   onBlur={(e) => { nextPage(e.target.value) }}
@@ -235,41 +209,14 @@ const Search: React.FC<Props> = props => {
                   variant="outlined"
                   className={classes.field}
                 />
-                {page === 2 &&
-                  <Card className={classes.card}>
-                    <img src={moviedata.thumbnailUrl} className={classes.liimg} />
-                    <div className={classes.liinfo}>
-                      <Typography component="p" style={{ fontWeight: 'bold' }}>
-                        {moviedata.title}
-                      </Typography>
-                      <Typography variant="caption">
-                        {moviedata.channelTitle}
-                      </Typography>
-                    </div>
-                  </Card>
-                }
-                <TextField
-                  label="投稿内容"
-                  type="text"
-                  name="content"
-                  fullWidth
-                  margin="normal"
-                  rows="10"
-                  inputRef={register({ required: true, minLength: 20 })}
-                  multiline
-                  error={Boolean(errors.content)}
-                  helperText={errors.content && "内容は20文字以上にして下さい。"}
-                  variant="outlined"
-                  className={classes.field}
-                />
                 <div className={classes.button_wrapper}>
                   <button
                     color="primary"
                     type="submit"
                     className={classes.submitbutton}
                   >
-                    投稿
-            </button>
+                    検索
+                  </button>
                 </div>
               </form>
 

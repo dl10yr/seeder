@@ -12,6 +12,8 @@ import Login from './containers/Login';
 import Posts from './containers/Posts';
 import PostsDetail from './containers/PostsDetail';
 import New from './containers/New';
+import Search from './containers/Search';
+
 import ResponsiveDrawer from './containers/ResponsiveDrawer';
 import Notification from './containers/Notification';
 
@@ -32,6 +34,7 @@ function App() {
             <Route path="/login" component={Login} />
             <Route path="/info" component={Info} />
             <Route exact path="/posts" component={Posts} />
+            <Route exact path="/search" component={Search} />
             <Route exact path="/new" component={New} />
             <Route exact key="/posts/:id" path="/posts/:id" component={PostsDetail} />
           </Switch>
