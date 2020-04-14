@@ -173,7 +173,20 @@ const New: React.FC<Props> = props => {
     );
   }
 
-  function getNgram(channelTitle, title, n) {
+  function getNgram(channelTitle: string, title: string, n) {
+    //句読点は削除、スペースも削除
+    channelTitle = channelTitle.replace(/\s+/g, "");
+    title = title.replace(/\s+/g, "");
+
+    var i;
+    var grams = new Array();
+    for (i = 0; i <= channelTitle.length - n; i++) {
+      grams.push(channelTitle.substr(i, n).toLowerCase());
+    }
+    for (i = 0; i <= title.length - n; i++) {
+      grams.push(title.substr(i, n).toLowerCase());
+    }
+    return grams;
 
   }
 
@@ -186,7 +199,7 @@ const New: React.FC<Props> = props => {
     const video_id = moviedata.video_id
     const content = values.content
     const post_id = getUniqueStr();
-    const search_words = getNgram(channelTitle, title, 2);
+    const searchWords = getNgram(channelTitle, title, 2);
 
     const data = {
       title: title,
@@ -199,6 +212,7 @@ const New: React.FC<Props> = props => {
       uid: currentuser.uid,
       video_id: video_id,
       tags: tags,
+      searchWords: searchWords,
     }
     console.log(data)
     firestore.collection('posts')
