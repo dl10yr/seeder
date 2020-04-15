@@ -128,66 +128,39 @@ const Search: React.FC<Props> = props => {
     tags: new Array(),
     video_id: "",
   });
-  const nextPage = (value) => {
-    const movie_url = value.split('/')
-    var movie_id = movie_url.slice(-1)[0]
-    if (movie_id.indexOf('watch?v=') != -1) {
-      var movie_id = movie_id.replace('watch?v=', '')
-    } else {
-    }
-    const url = `https://www.googleapis.com/youtube/v3/videos?id=${movie_id}&key=${YOUTUBE_API_KEY}&part=snippet`;
-    axios.get(url)
-      .then((response) => {
-        if (!response.data.items[0].snippet.tags) {
-          let movie_data = {
-            title: response.data.items[0].snippet.title,
-            channelId: response.data.items[0].snippet.channelId,
-            thumbnailUrl: response.data.items[0].snippet.thumbnails.medium.url,
-            channelTitle: response.data.items[0].snippet.channelTitle,
-            tags: [],
-            video_id: response.data.items[0].id
-          }
-          setMoviedata(movie_data)
-        } else {
-          let movie_data = {
-            title: response.data.items[0].snippet.title,
-            channelId: response.data.items[0].snippet.channelId,
-            thumbnailUrl: response.data.items[0].snippet.thumbnails.medium.url,
-            channelTitle: response.data.items[0].snippet.channelTitle,
-            tags: response.data.items[0].snippet.tags,
-            video_id: response.data.items[0].id,
-          }
-          setMoviedata(movie_data)
-        }
-        setPage(2);
-      })
-      .catch((error) => {
-      })
-  };
-
-  function getUniqueStr() {
-    var strong = 1000;
-    return (
-      new Date().getTime().toString(16) +
-      Math.floor(strong * Math.random()).toString(16)
-    );
-  }
 
   const search = (values) => {
+    let tmp_posts = new Array();
+    let start_date = new Date();
+    let end_date = new Date();
     const searchWords = values.searchWords
     firestore.collection('posts')
-      .add(data)
-      .then(() => {
-        reset();
-        setPage(1);
-        dispatch({ type: 'SET_NOTIFICATION', variant: 'success', message: '送信に成功しました' });
+      .where("searchWords", "array-contains-any", ["ナカイド"])
+      .orderBy('created_at', 'desc')
+      .limit(10)
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          let post = {
+            content: doc.data().content,
+            created_at: doc.data().created_at.toDate(),
+            channelId: doc.data().channelId,
+            thumbnailUrl: doc.data().thumbnailUrl,
+            title: doc.data().title,
+            post_id: doc.data().post_id,
+            channelTitle: doc.data().channelTitle,
+            video_id: doc.data().video_id,
+          }
+          tmp_posts.push(post);
+        })
+        console.log(tmp_posts);
       })
-      .catch(() => {
-        dispatch({ type: 'SET_NOTIFICATION', variant: 'error', message: '送信に失敗しました' });
-      })
+
+    // start_date = tmp_posts[0].created_at;
+    // end_date = tmp_posts.slice(-1)[0].created_at;
+    // setGlobal({ postslist: { posts: tmp_posts, startDate: start_date, endDate: end_date, isLoading: false } });
 
   }
-
 
   return (
     <div className={classes.container}>
@@ -202,7 +175,6 @@ const Search: React.FC<Props> = props => {
                   name="searchWords"
                   fullWidth
                   margin="normal"
-                  onBlur={(e) => { nextPage(e.target.value) }}
                   inputRef={register({ required: true, })}
                   error={Boolean(errors.url)}
                   helperText={errors.url && "YouTube動画のURLを入力してください"}
