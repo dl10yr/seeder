@@ -103,6 +103,7 @@ const PostsDetailCard: React.FC<Props> = props => {
     channelTitle: string,
     thumbnailUrl: string,
     video_id: string,
+    doc_id: string,
   }
   type Comment = {
     content: string,
@@ -135,7 +136,8 @@ const PostsDetailCard: React.FC<Props> = props => {
     channelId: "",
     channelTitle: "",
     thumbnailUrl: "",
-    video_id: ""
+    video_id: "",
+    doc_id: ""
   });
 
   const [commentslist, setCommentslist] = useState<Commentslist>({
@@ -178,6 +180,7 @@ const PostsDetailCard: React.FC<Props> = props => {
         .limit(10)
         .get()
       snapShot.forEach(doc => {
+
         let data = {
           content: doc.data().content,
           created_at: doc.data().created_at.toDate(),
@@ -187,6 +190,7 @@ const PostsDetailCard: React.FC<Props> = props => {
           post_id: doc.data().post_id,
           channelTitle: doc.data().channelTitle,
           video_id: doc.data().video_id,
+          doc_id: doc.id
         }
         setDisplaypost(data);
 
@@ -200,7 +204,26 @@ const PostsDetailCard: React.FC<Props> = props => {
 
   const postLike = () => {
     const batch = firestore.batch()
-
+    batch.set(
+      firestore
+        .doc(displaypost.doc_id)
+        .collection('likedUsers')
+        .doc(currentuser.uid),
+      {
+        id: currentuser.uid,
+        createTime: new Date(),
+      }
+    )
+    batch.set(
+      firestore
+        .doc(displaypost.doc_id)
+        .collection('likedUsers')
+        .doc(currentuser.uid),
+      {
+        id: currentuser.uid,
+        createTime: new Date(),
+      }
+    )
   }
 
 
