@@ -198,6 +198,11 @@ const PostsDetailCard: React.FC<Props> = props => {
     }
   };
 
+  const postLike = () => {
+    const batch = firestore.batch()
+
+  }
+
 
   useEffect(() => {
     selectPosts();
