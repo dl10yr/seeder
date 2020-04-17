@@ -84,6 +84,12 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     postsdetailcard: {
 
+    },
+    submitbutton: {
+
+    },
+    button_wrapper: {
+
     }
   })
 );
@@ -261,6 +267,16 @@ const PostsDetailCard: React.FC<Props> = props => {
                   </Typography>
                   <Typography component="p" style={{ fontWeight: 'bold' }}>
                   </Typography>
+                  <div className={classes.button_wrapper}>
+                    <button
+                      color="primary"
+                      type="submit"
+                      className={classes.submitbutton}
+                      onClick={() => { postLike(); }}
+                    >
+                      like
+                    </button>
+                  </div>
                 </Paper>
                 <Comments post_id={props.post_id} commentslist={commentslist} />
 
