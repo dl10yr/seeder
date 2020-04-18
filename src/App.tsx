@@ -39,7 +39,6 @@ function App() {
             <Route exact key="/posts/:id" path="/posts/:id" component={PostsDetail} />
           </Switch>
         </ResponsiveDrawer>
-
       </div >
     </Router >
   );

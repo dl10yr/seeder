@@ -13,6 +13,7 @@ import { firestore } from '../plugins/firebase';
 import Comments from '../components/Comments';
 import YouTube from 'react-youtube';
 import { AutoSizer } from 'react-virtualized';
+import { BackButton, Card, Icon, Page, Tab, Tabbar, Toolbar, ToolbarButton } from "react-onsenui";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -244,6 +245,7 @@ const PostsDetailCard: React.FC<Props> = props => {
           return (
             <Scrollbars style={{ width: width, height: height }}>
               <div className={classes.postsdetailcard}>
+                <BackButton />
                 <Paper className={classes.root} elevation={1}>
                   <div className={classes.liimg}>
                     {/* <img src={displaypost.thumbnailUrl} width="240" height="135" /> */}
@@ -279,7 +281,6 @@ const PostsDetailCard: React.FC<Props> = props => {
                   </div>
                 </Paper>
                 <Comments post_id={props.post_id} commentslist={commentslist} />
-
               </div>
             </Scrollbars>
           );

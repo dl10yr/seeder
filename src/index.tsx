@@ -15,6 +15,8 @@ import firebase from 'firebase';
 import { firestore } from './plugins/firebase';
 import { StateProvider } from './store';
 import { getHeapCodeStatistics } from "v8";
+import 'onsenui/css/onsenui.css';
+import 'onsenui/css/onsen-css-components.css';
 
 // const middlewares = []
 // middlewares.push(thunk)
@@ -57,12 +59,24 @@ async function getPosts() {
 };
 
 async function login() {
-  await firebase.auth().signInAnonymously().catch(function (error) {
-    // Handle Errors here.
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    // ...
-  });
+  await firebase.auth().signInAnonymously()
+    .then(e => {
+      if (e.user) {
+        const userRef = firestore.collection('users').doc(e.user.uid)
+        userRef.set({
+          uid: e.user.uid,
+          displayName: e.user.displayName,
+          photoURL: e.user.photoURL,
+          isAnonymus: e.user.isAnonymous,
+        })
+      }
+    }).catch(function (error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // ...
+    });
+
   await firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       // User is signed in.

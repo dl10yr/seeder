@@ -215,7 +215,7 @@ const New: React.FC<Props> = props => {
       searchWords: searchWords,
     }
     console.log(data)
-    firestore.collection('posts')
+    firestore.collection('users').doc(currentuser.uid).collection('posts')
       .add(data)
       .then(() => {
         reset();
