@@ -11,5 +11,11 @@
   "compileOnSave": true,
   "include": [
     "src"
-  ]
+  ],
+  "skipLibCheck": true,
+  "types": [
+    "react",
+    "react-native",
+    "jest"
+  ],
 }

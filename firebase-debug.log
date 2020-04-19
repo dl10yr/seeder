@@ -1,0 +1,63 @@
+[debug] [2020-04-19T01:17:51.707Z] ----------------------------------------------------------------------
+[debug] [2020-04-19T01:17:51.713Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve
+[debug] [2020-04-19T01:17:51.714Z] CLI Version:   8.1.1
+[debug] [2020-04-19T01:17:51.714Z] Platform:      linux
+[debug] [2020-04-19T01:17:51.714Z] Node Version:  v13.5.0
+[debug] [2020-04-19T01:17:51.715Z] Time:          Sun Apr 19 2020 01:17:51 GMT+0000 (Coordinated Universal Time)
+[debug] [2020-04-19T01:17:51.716Z] ----------------------------------------------------------------------
+[debug] [2020-04-19T01:17:51.716Z] 
+[debug] [2020-04-19T01:17:51.767Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-04-19T01:17:51.771Z] > authorizing via signed-in user
+[debug] [2020-04-19T01:17:51.773Z] [iam] checking project seeder-70005 for permissions ["firebase.projects.get"]
+[debug] [2020-04-19T01:17:51.781Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2020-04-19T01:17:51.783Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2020-04-19T01:17:51.999Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 19 Apr 2020 01:17:51 GMT","server":"scaffolding on HTTPServer2","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"quic=\":443\"; ma=2592000; v=\"46,43\",h3-Q050=\":443\"; ma=2592000,h3-Q049=\":443\"; ma=2592000,h3-Q048=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-04-19T01:17:52.008Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/seeder-70005:testIamPermissions  
+ {"permissions":["firebase.projects.get"]}
+[debug] [2020-04-19T01:17:52.514Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 19 Apr 2020 01:17:52 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=287","alt-svc":"quic=\":443\"; ma=2592000; v=\"46,43\",h3-Q050=\":443\"; ma=2592000,h3-Q049=\":443\"; ma=2592000,h3-Q048=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-04-19T01:17:52.517Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/seeder-70005  
+ 
+[debug] [2020-04-19T01:17:53.331Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 19 Apr 2020 01:17:53 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"quic=\":443\"; ma=2592000; v=\"46,43\",h3-Q050=\":443\"; ma=2592000,h3-Q049=\":443\"; ma=2592000,h3-Q048=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] 
+[info] === Serving from '/usr/src/app/seeder'...
+[info] 
+[debug] [2020-04-19T01:17:53.336Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/seeder-70005/webApps/-/config  
+ 
+[warn] ⚠  Your requested "node" version "8" doesn't match your global version "13"
+[info] ✔  functions: functions emulator started at http://localhost:5001
+[debug] [2020-04-19T01:17:54.873Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 19 Apr 2020 01:17:54 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"quic=\":443\"; ma=2592000; v=\"46,43\",h3-Q050=\":443\"; ma=2592000,h3-Q049=\":443\"; ma=2592000,h3-Q048=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  functions: Watching "/usr/src/app/seeder/functions" for Cloud Functions...
+[debug] [2020-04-19T01:17:54.950Z] [worker-pool] addWorker(~diagnostic~) 
+[debug] [2020-04-19T01:17:54.951Z] [worker-pool] Adding worker with key ~diagnostic~, total=1 
+[debug] [2020-04-19T01:17:54.951Z] [worker-pool] submitWork(triggerId=) 
+[debug] [2020-04-19T01:17:54.953Z] [worker-~diagnostic~-afd00c48-19d7-4486-b258-1af11d06dd84]: Assigning socketPath: /tmp/fire_emu_293.sock 
+[debug] [2020-04-19T01:17:54.954Z] [worker-~diagnostic~-afd00c48-19d7-4486-b258-1af11d06dd84]: BUSY 
+[info] i  hosting: Serving hosting files from: public
+[info] ✔  hosting: Local server: http://localhost:5000
+[debug] [2020-04-19T01:17:56.199Z] [runtime-status] [293] Functions runtime initialized. {"cwd":"/usr/src/app/seeder/functions","node_version":"13.5.0"} 
+[debug] [2020-04-19T01:17:56.219Z] [runtime-status] [293] Disabled runtime features: undefined 
+[debug] [2020-04-19T01:17:56.286Z] [runtime-status] [293] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.10.0","resolution":"/usr/src/app/seeder/functions/node_modules/firebase-admin/lib/index.js"} 
+[debug] [2020-04-19T01:17:56.307Z] [runtime-status] [293] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/usr/src/app/seeder/functions/node_modules/firebase-functions/lib/index.js"} 
+[debug] [2020-04-19T01:17:56.313Z] [runtime-status] [293] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] 
+[debug] [2020-04-19T01:17:57.011Z] [runtime-status] [293] Checked functions.config() {"config":{}} 
+[debug] [2020-04-19T01:17:57.024Z] [runtime-status] [293] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/usr/src/app/seeder/functions/node_modules/firebase-functions/lib/index.js"} 
+[debug] [2020-04-19T01:17:57.050Z] [runtime-status] [293] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.10.0","resolution":"/usr/src/app/seeder/functions/node_modules/firebase-admin/lib/index.js"} 
+[debug] [2020-04-19T01:17:57.064Z] [runtime-status] [293] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"/usr/src/app/seeder/functions/node_modules/firebase-functions/lib/index.js"} 
+[debug] [2020-04-19T01:17:57.066Z] [runtime-status] [293] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"8.10.0","resolution":"/usr/src/app/seeder/functions/node_modules/firebase-admin/lib/index.js"}} 
+[warn] ⚠  Error: Cannot find module '/usr/src/app/seeder/functions/lib/index.js'. Please verify that the package.json has a valid "main" entry
+    at tryPackage (internal/modules/cjs/loader.js:313:19)
+    at Function.Module._findPath (internal/modules/cjs/loader.js:693:18)
+    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:953:27)
+    at Function.Module._load (internal/modules/cjs/loader.js:859:27)
+    at Module.require (internal/modules/cjs/loader.js:1028:19)
+    at require (internal/modules/cjs/helpers.js:72:18)
+    at /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:661:33
+    at Generator.next (<anonymous>)
+    at fulfilled (/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:5:58)
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+[warn] ⚠  We were unable to load your functions code. (see above)
+   - It appears your code is written in Typescript, which must be compiled before emulation.
+   - You may be able to run "npm run build" in your functions directory to resolve this.
+[debug] [2020-04-19T01:17:57.152Z] [worker-~diagnostic~-afd00c48-19d7-4486-b258-1af11d06dd84]: exited 
+[debug] [2020-04-19T01:17:57.154Z] [worker-~diagnostic~-afd00c48-19d7-4486-b258-1af11d06dd84]: FINISHED 

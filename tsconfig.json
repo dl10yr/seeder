@@ -23,4 +23,9 @@
   "include": [
     "src"
   ],
+  "types": [
+    "react",
+    "react-native",
+    "jest"
+  ],
 }

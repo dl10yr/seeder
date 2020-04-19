@@ -10,7 +10,7 @@
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "13"
+    "node": "8"
   },
   "main": "lib/index.js",
   "dependencies": {
@@ -23,7 +23,7 @@
     "firebase-functions-test": "^0.1.6"
   },
   "resolutions": {
-    "@types/react": "^16.9.0"
+    "@types/react": "^16.8.10"
   },
   "private": true
 }
